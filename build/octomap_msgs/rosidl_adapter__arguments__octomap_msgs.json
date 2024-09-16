@@ -1,0 +1,9 @@
+{
+  "package_name": "octomap_msgs",
+  "non_idl_tuples": [
+    "/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_msgs:msg/Octomap.msg",
+    "/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_msgs:msg/OctomapWithPose.msg",
+    "/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_msgs:srv/BoundingBoxQuery.srv",
+    "/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_msgs:srv/GetOctomap.srv"
+  ]
+}

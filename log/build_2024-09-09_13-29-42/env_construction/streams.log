@@ -1,0 +1,109 @@
+[0.088s] Invoking command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/env_construction': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake --build /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/env_construction -- -j8 -l8
+[0.184s] -- Found ament_cmake: 1.3.10 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.597s] -- Found rclcpp: 16.0.10 (/opt/ros/humble/share/rclcpp/cmake)
+[0.661s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.669s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.678s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.714s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.755s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.842s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.853s] -- Found rmw_fastrtps_cpp: 6.2.7 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[1.179s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.295s] -- Found gazebo_ros: 3.7.0 (/opt/ros/humble/share/gazebo_ros/cmake)
+[1.368s] -- Found DART: /usr/include (Required is at least version "6.6") found components: dart 
+[1.413s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found suitable version "1.74.0", minimum required is "1.40.0") found components: thread system filesystem program_options regex iostreams date_time 
+[1.439s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found version "3.12.4") 
+[1.444s] -- Looking for ignition-math6 -- found version 6.15.1
+[1.454s] -- Searching for dependencies of ignition-math6
+[1.457s] -- Looking for OGRE...
+[1.473s] -- Found Ogre Ghadamon (1.9.0)
+[1.474s] -- Found OGRE: optimized;/usr/lib/x86_64-linux-gnu/libOgreMain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreMain.so
+[1.494s] -- Looking for OGRE_Paging...
+[1.494s] -- Found OGRE_Paging: optimized;/usr/lib/x86_64-linux-gnu/libOgrePaging.so;debug;/usr/lib/x86_64-linux-gnu/libOgrePaging.so
+[1.494s] -- Looking for OGRE_Terrain...
+[1.495s] -- Found OGRE_Terrain: optimized;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so
+[1.495s] -- Looking for OGRE_Property...
+[1.495s] -- Found OGRE_Property: optimized;/usr/lib/x86_64-linux-gnu/libOgreProperty.so;debug;/usr/lib/x86_64-linux-gnu/libOgreProperty.so
+[1.495s] -- Looking for OGRE_RTShaderSystem...
+[1.495s] -- Found OGRE_RTShaderSystem: optimized;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so;debug;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so
+[1.496s] -- Looking for OGRE_Volume...
+[1.496s] -- Found OGRE_Volume: optimized;/usr/lib/x86_64-linux-gnu/libOgreVolume.so;debug;/usr/lib/x86_64-linux-gnu/libOgreVolume.so
+[1.496s] -- Looking for OGRE_Overlay...
+[1.496s] -- Found OGRE_Overlay: optimized;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so;debug;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so
+[2.297s] -- Looking for ignition-math6 -- found version 6.15.1
+[2.297s] -- Looking for ignition-transport8 -- found version 8.2.1
+[2.299s] -- Searching for dependencies of ignition-transport8
+[2.366s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found suitable version "3.12.4", minimum required is "3") 
+[2.409s] -- Config-file not installed for ZeroMQ -- checking for pkg-config
+[2.423s] -- Checking for module 'libzmq >= 4'
+[2.473s] --   Found libzmq , version 4.3.4
+[2.607s] -- Checking for module 'uuid'
+[2.659s] --   Found uuid, version 2.37.2
+[2.773s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[2.773s] -- Searching for dependencies of ignition-msgs5
+[2.834s] -- Looking for ignition-math6 -- found version 6.15.1
+[2.849s] -- Checking for module 'tinyxml2'
+[2.901s] --   Found tinyxml2, version 9.0.0
+[3.008s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[3.009s] -- Looking for ignition-common3 -- found version 3.14.0
+[3.010s] -- Searching for dependencies of ignition-common3
+[3.010s] -- Looking for dlfcn.h - found
+[3.010s] -- Looking for libdl - found
+[3.040s] -- Searching for <ignition-common3> component [graphics]
+[3.041s] -- Looking for ignition-common3-graphics -- found version 3.14.0
+[3.042s] -- Searching for dependencies of ignition-common3-graphics
+[3.043s] -- Looking for ignition-math6 -- found version 6.15.1
+[3.045s] -- Looking for ignition-fuel_tools4 -- found version 4.4.0
+[3.046s] -- Searching for dependencies of ignition-fuel_tools4
+[3.160s] -- Checking for module 'jsoncpp'
+[3.209s] --   Found jsoncpp, version 1.9.5
+[3.328s] -- Checking for module 'libzip'
+[3.376s] --   Found libzip, version 1.7.3
+[3.479s] -- Looking for ignition-common3 -- found version 3.14.0
+[3.480s] -- Looking for ignition-math6 -- found version 6.15.1
+[3.482s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[3.486s] -- Gazebo version: 11.10
+[3.488s] -- Found gazebo_ros_pkgs: 3.7.0 (/opt/ros/humble/share/gazebo_ros_pkgs/cmake)
+[3.488s] -- Found ros2_control: 2.43.0 (/opt/ros/humble/share/ros2_control/cmake)
+[3.489s] -- Found ros2_controllers: 2.37.2 (/opt/ros/humble/share/ros2_controllers/cmake)
+[3.489s] -- Found trajectory_msgs: 4.2.4 (/opt/ros/humble/share/trajectory_msgs/cmake)
+[3.553s] -- Found mycobot_gazebo: 0.0.0 (/home/ctaylor71023/ros2_ws/install/mycobot_gazebo/share/mycobot_gazebo/cmake)
+[3.575s] -- Found xacro: 2.0.8 (/opt/ros/humble/share/xacro/cmake)
+[3.575s] -- Found moveit: 2.5.5 (/home/ctaylor71023/ws_moveit/install/moveit/share/moveit/cmake)
+[3.576s] -- Found moveit_core: 2.5.5 (/home/ctaylor71023/ws_moveit/install/moveit_core/share/moveit_core/cmake)
+[3.592s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: chrono date_time filesystem iostreams program_options regex serialization system thread 
+[3.678s] -- Found parameter_traits: 0.3.8 (/opt/ros/humble/share/parameter_traits/cmake)
+[3.697s] -- Found rclcpp_lifecycle: 16.0.10 (/opt/ros/humble/share/rclcpp_lifecycle/cmake)
+[3.748s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: filesystem 
+[3.846s] -- library: /usr/lib/x86_64-linux-gnu/libcurl.so
+[3.984s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[4.487s] -- Found ament_lint_auto: 0.12.11 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[4.696s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[4.698s] -- Configured cppcheck include dirs: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/env_construction/dependencies
+[4.699s] -- Configured cppcheck exclude dirs and/or files: 
+[4.703s] -- Added test 'lint_cmake' to check CMake code style
+[4.705s] -- Added test 'uncrustify' to check C / C++ code style
+[4.705s] -- Configured uncrustify additional arguments: 
+[4.709s] -- Added test 'xmllint' to check XML markup files
+[4.710s] -- Configuring done
+[4.727s] -- Generating done
+[4.735s] -- Build files have been written to: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/env_construction
+[4.824s] Invoked command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/env_construction' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake --build /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/env_construction -- -j8 -l8
+[4.921s] Invoking command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/env_construction': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake --install /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/env_construction
+[4.947s] -- Install configuration: ""
+[4.947s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/ament_index/resource_index/package_run_dependencies/env_construction
+[4.947s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/ament_index/resource_index/parent_prefix_path/env_construction
+[4.948s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/env_construction/environment/ament_prefix_path.sh
+[4.948s] -- Installing: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/env_construction/environment/ament_prefix_path.dsv
+[4.948s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/env_construction/environment/path.sh
+[4.949s] -- Installing: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/env_construction/environment/path.dsv
+[4.949s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/env_construction/local_setup.bash
+[4.949s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/env_construction/local_setup.sh
+[4.950s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/env_construction/local_setup.zsh
+[4.950s] -- Installing: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/env_construction/local_setup.dsv
+[4.950s] -- Installing: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/env_construction/package.dsv
+[4.950s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/ament_index/resource_index/packages/env_construction
+[4.950s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/env_construction/cmake/env_constructionConfig.cmake
+[4.951s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/env_construction/cmake/env_constructionConfig-version.cmake
+[4.951s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/env_construction/share/env_construction/package.xml
+[4.956s] Invoked command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/env_construction' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake --install /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/env_construction

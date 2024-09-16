@@ -1,0 +1,8 @@
+source;share/env_construction/hook/cmake_prefix_path.ps1
+source;share/env_construction/hook/cmake_prefix_path.dsv
+source;share/env_construction/hook/cmake_prefix_path.sh
+source;share/env_construction/local_setup.bash
+source;share/env_construction/local_setup.dsv
+source;share/env_construction/local_setup.ps1
+source;share/env_construction/local_setup.sh
+source;share/env_construction/local_setup.zsh

@@ -1,0 +1,3 @@
+[ 50%] [32mBuilding CXX object CMakeFiles/raw_env_data_collect.dir/src/raw_env_data_collect.cpp.o[0m
+[100%] [32m[1mLinking CXX executable raw_env_data_collect[0m
+[100%] Built target raw_env_data_collect

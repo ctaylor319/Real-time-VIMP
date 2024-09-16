@@ -1,0 +1,101 @@
+[0.030s] Invoking command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/robot_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake --build /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/robot_control -- -j8 -l8
+[0.074s] -- Found ament_cmake: 1.3.10 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.268s] -- Found rclcpp: 16.0.10 (/opt/ros/humble/share/rclcpp/cmake)
+[0.304s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.307s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.313s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.327s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.342s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.376s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.381s] -- Found rmw_fastrtps_cpp: 6.2.7 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[0.532s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.579s] -- Found gazebo_ros: 3.7.0 (/opt/ros/humble/share/gazebo_ros/cmake)
+[0.614s] -- Found DART: /usr/include (Required is at least version "6.6") found components: dart 
+[0.633s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found suitable version "1.74.0", minimum required is "1.40.0") found components: thread system filesystem program_options regex iostreams date_time 
+[0.643s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found version "3.12.4") 
+[0.646s] -- Looking for ignition-math6 -- found version 6.15.1
+[0.650s] -- Searching for dependencies of ignition-math6
+[0.652s] -- Looking for OGRE...
+[0.659s] -- Found Ogre Ghadamon (1.9.0)
+[0.659s] -- Found OGRE: optimized;/usr/lib/x86_64-linux-gnu/libOgreMain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreMain.so
+[0.669s] -- Looking for OGRE_Paging...
+[0.669s] -- Found OGRE_Paging: optimized;/usr/lib/x86_64-linux-gnu/libOgrePaging.so;debug;/usr/lib/x86_64-linux-gnu/libOgrePaging.so
+[0.669s] -- Looking for OGRE_Terrain...
+[0.669s] -- Found OGRE_Terrain: optimized;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so
+[0.670s] -- Looking for OGRE_Property...
+[0.670s] -- Found OGRE_Property: optimized;/usr/lib/x86_64-linux-gnu/libOgreProperty.so;debug;/usr/lib/x86_64-linux-gnu/libOgreProperty.so
+[0.670s] -- Looking for OGRE_RTShaderSystem...
+[0.670s] -- Found OGRE_RTShaderSystem: optimized;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so;debug;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so
+[0.670s] -- Looking for OGRE_Volume...
+[0.670s] -- Found OGRE_Volume: optimized;/usr/lib/x86_64-linux-gnu/libOgreVolume.so;debug;/usr/lib/x86_64-linux-gnu/libOgreVolume.so
+[0.670s] -- Looking for OGRE_Overlay...
+[0.670s] -- Found OGRE_Overlay: optimized;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so;debug;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so
+[1.010s] -- Looking for ignition-math6 -- found version 6.15.1
+[1.010s] -- Looking for ignition-transport8 -- found version 8.2.1
+[1.011s] -- Searching for dependencies of ignition-transport8
+[1.042s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found suitable version "3.12.4", minimum required is "3") 
+[1.062s] -- Config-file not installed for ZeroMQ -- checking for pkg-config
+[1.069s] -- Checking for module 'libzmq >= 4'
+[1.093s] --   Found libzmq , version 4.3.4
+[1.157s] -- Checking for module 'uuid'
+[1.180s] --   Found uuid, version 2.37.2
+[1.233s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[1.234s] -- Searching for dependencies of ignition-msgs5
+[1.263s] -- Looking for ignition-math6 -- found version 6.15.1
+[1.270s] -- Checking for module 'tinyxml2'
+[1.295s] --   Found tinyxml2, version 9.0.0
+[1.350s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[1.350s] -- Looking for ignition-common3 -- found version 3.14.0
+[1.351s] -- Searching for dependencies of ignition-common3
+[1.351s] -- Looking for dlfcn.h - found
+[1.351s] -- Looking for libdl - found
+[1.365s] -- Searching for <ignition-common3> component [graphics]
+[1.366s] -- Looking for ignition-common3-graphics -- found version 3.14.0
+[1.367s] -- Searching for dependencies of ignition-common3-graphics
+[1.367s] -- Looking for ignition-math6 -- found version 6.15.1
+[1.369s] -- Looking for ignition-fuel_tools4 -- found version 4.4.0
+[1.369s] -- Searching for dependencies of ignition-fuel_tools4
+[1.430s] -- Checking for module 'jsoncpp'
+[1.453s] --   Found jsoncpp, version 1.9.5
+[1.513s] -- Checking for module 'libzip'
+[1.538s] --   Found libzip, version 1.7.3
+[1.588s] -- Looking for ignition-common3 -- found version 3.14.0
+[1.589s] -- Looking for ignition-math6 -- found version 6.15.1
+[1.589s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[1.591s] -- Gazebo version: 11.10
+[1.592s] -- Found gazebo_ros2_control: 0.4.9 (/opt/ros/humble/share/gazebo_ros2_control/cmake)
+[1.785s] -- Found gazebo_ros_pkgs: 3.7.0 (/opt/ros/humble/share/gazebo_ros_pkgs/cmake)
+[1.785s] -- Found ros2_control: 2.43.0 (/opt/ros/humble/share/ros2_control/cmake)
+[1.786s] -- Found ros2_controllers: 2.37.2 (/opt/ros/humble/share/ros2_controllers/cmake)
+[1.786s] -- Found mycobot_gazebo: 0.0.0 (/home/ctaylor71023/ros2_ws/install/mycobot_gazebo/share/mycobot_gazebo/cmake)
+[1.787s] -- Found xacro: 2.0.8 (/opt/ros/humble/share/xacro/cmake)
+[1.787s] -- Found moveit: 2.5.5 (/home/ctaylor71023/ws_moveit/install/moveit/share/moveit/cmake)
+[1.787s] -- Found moveit_core: 2.5.5 (/home/ctaylor71023/ws_moveit/install/moveit_core/share/moveit_core/cmake)
+[1.796s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: chrono date_time filesystem iostreams program_options regex serialization system thread 
+[1.828s] -- Found parameter_traits: 0.3.8 (/opt/ros/humble/share/parameter_traits/cmake)
+[1.841s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: filesystem 
+[1.887s] -- library: /usr/lib/x86_64-linux-gnu/libcurl.so
+[1.930s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[2.290s] -- Found ament_lint_auto: 0.12.11 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[2.374s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[2.375s] -- Configured cppcheck include dirs: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/robot_control/dependencies;/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/robot_control/include/robot_control
+[2.375s] -- Configured cppcheck exclude dirs and/or files: 
+[2.377s] -- Added test 'lint_cmake' to check CMake code style
+[2.378s] -- Added test 'uncrustify' to check C / C++ code style
+[2.378s] -- Configured uncrustify additional arguments: 
+[2.381s] -- Added test 'xmllint' to check XML markup files
+[2.381s] -- Configuring done
+[2.497s] -- Generating done
+[2.501s] -- Build files have been written to: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/robot_control
+[2.569s] [ 50%] [32mBuilding CXX object CMakeFiles/publish_final_trajectory.dir/src/publish_final_trajectory.cpp.o[0m
+[2.569s] [ 50%] [32mBuilding CXX object CMakeFiles/add_time_parameterization.dir/src/add_time_parameterization.cpp.o[0m
+[2.604s] [ 75%] [32m[1mLinking CXX executable publish_final_trajectory[0m
+[9.208s] /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
+[9.208s] (.text+0x1b): undefined reference to `main'
+[9.212s] collect2: error: ld returned 1 exit status
+[9.214s] gmake[2]: *** [CMakeFiles/publish_final_trajectory.dir/build.make:480: publish_final_trajectory] Error 1
+[9.214s] gmake[1]: *** [CMakeFiles/Makefile2:165: CMakeFiles/publish_final_trajectory.dir/all] Error 2
+[9.214s] gmake[1]: *** Waiting for unfinished jobs....
+[10.581s] [100%] [32m[1mLinking CXX executable add_time_parameterization[0m
+[11.121s] [100%] Built target add_time_parameterization
+[11.122s] gmake: *** [Makefile:146: all] Error 2

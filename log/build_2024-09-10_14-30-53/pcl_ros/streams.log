@@ -1,0 +1,161 @@
+[0.096s] Invoking command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/pcl_ros': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/perception_pcl/pcl_ros -DCMAKE_INSTALL_PREFIX=/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros
+[0.152s] -- Eigen found (include: /usr/include/eigen3, version: 3.4.0)
+[0.259s] -- FLANN found (include: /usr/include, lib: /usr/lib/x86_64-linux-gnu/libflann_cpp.so)
+[1.333s] -- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+[1.344s] -- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)
+[1.727s] -- Eigen found (include: /usr/include/eigen3, version: 3.4.0)
+[1.730s] -- Found Qhull version 8.0.2
+[2.127s] -- Found ament_cmake: 1.3.10 (/opt/ros/humble/share/ament_cmake/cmake)
+[2.486s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[2.554s] -- Found pcl_conversions: 2.6.1 (/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_conversions/share/pcl_conversions/cmake)
+[2.608s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[2.614s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[2.625s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[2.656s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[2.697s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[2.797s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[2.810s] -- Found rmw_fastrtps_cpp: 6.2.7 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[3.103s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[3.327s] -- Found rclcpp_components: 16.0.10 (/opt/ros/humble/share/rclcpp_components/cmake)
+[3.368s] -- Found tf2: 0.25.7 (/opt/ros/humble/share/tf2/cmake)
+[3.374s] -- Found tf2_eigen: 0.25.7 (/opt/ros/humble/share/tf2_eigen/cmake)
+[3.503s] -- Found tf2_geometry_msgs: 0.25.7 (/opt/ros/humble/share/tf2_geometry_msgs/cmake)
+[3.510s] -- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)
+[3.511s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[4.940s] -- Found ament_lint_auto: 0.12.11 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[32.181s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[32.188s] -- Configured cppcheck include dirs: $<BUILD_INTERFACE:/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/perception_pcl/pcl_ros/include>
+[32.188s] -- Configured cppcheck exclude dirs and/or files: 
+[32.232s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[32.232s] -- Configured cpplint exclude dirs and/or files: 
+[32.237s] -- Added test 'flake8' to check Python code syntax and style conventions
+[32.246s] -- Added test 'lint_cmake' to check CMake code style
+[32.254s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[32.294s] -- Added test 'uncrustify' to check C / C++ code style
+[32.295s] -- Configured uncrustify additional arguments: 
+[32.303s] -- Added test 'xmllint' to check XML markup files
+[32.317s] -- Configuring done
+[33.464s] -- Generating done
+[33.489s] -- Build files have been written to: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/pcl_ros
+[33.574s] Invoked command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/pcl_ros' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/perception_pcl/pcl_ros -DCMAKE_INSTALL_PREFIX=/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros
+[33.577s] Invoking command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/pcl_ros': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake --build /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/pcl_ros -- -j8 -l8
+[33.890s] [35m[1mConsolidate compiler generated dependencies of target filter_extract_indices_node[0m
+[33.891s] [35m[1mConsolidate compiler generated dependencies of target filter_passthrough_node[0m
+[33.893s] [35m[1mConsolidate compiler generated dependencies of target filter_project_inliers_node[0m
+[33.897s] [35m[1mConsolidate compiler generated dependencies of target filter_crop_box_node[0m
+[33.923s] [35m[1mConsolidate compiler generated dependencies of target pcl_ros_tf[0m
+[33.930s] [35m[1mConsolidate compiler generated dependencies of target filter_statistical_outlier_removal_node[0m
+[33.936s] [35m[1mConsolidate compiler generated dependencies of target filter_radius_outlier_removal_node[0m
+[34.011s] [  5%] Built target filter_project_inliers_node
+[34.011s] [ 11%] Built target filter_extract_indices_node
+[34.037s] [ 17%] Built target filter_passthrough_node
+[34.056s] [ 22%] Built target filter_crop_box_node
+[34.088s] [ 28%] Built target filter_radius_outlier_removal_node
+[34.088s] [ 34%] Built target filter_statistical_outlier_removal_node
+[34.102s] [35m[1mConsolidate compiler generated dependencies of target filter_voxel_grid_node[0m
+[34.134s] [35m[1mConsolidate compiler generated dependencies of target pointcloud_to_pcd[0m
+[34.146s] [ 40%] Built target pcl_ros_tf
+[34.150s] [35m[1mConsolidate compiler generated dependencies of target pcd_to_pointcloud_lib[0m
+[34.156s] [35m[1mConsolidate compiler generated dependencies of target pcd_to_pointcloud[0m
+[34.163s] [35m[1mConsolidate compiler generated dependencies of target pointcloud_to_pcd_lib[0m
+[34.187s] [35m[1mConsolidate compiler generated dependencies of target dummy_topics[0m
+[34.256s] [ 45%] Built target filter_voxel_grid_node
+[34.256s] [ 51%] Built target pointcloud_to_pcd
+[34.264s] [35m[1mConsolidate compiler generated dependencies of target pcl_ros_filters[0m
+[34.318s] [ 57%] Built target pcd_to_pointcloud
+[34.344s] [ 62%] Built target pointcloud_to_pcd_lib
+[34.356s] [ 68%] Built target pcd_to_pointcloud_lib
+[34.379s] [ 74%] Built target dummy_topics
+[34.452s] [100%] Built target pcl_ros_filters
+[34.499s] Invoked command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/pcl_ros' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake --build /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/pcl_ros -- -j8 -l8
+[34.986s] Invoking command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/pcl_ros': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake --install /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/pcl_ros
+[35.019s] -- Install configuration: ""
+[35.020s] -- Execute custom install script
+[35.020s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/lib/pcl_ros/filter_extract_indices_node
+[35.020s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/lib/pcl_ros/filter_passthrough_node
+[35.020s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/lib/pcl_ros/filter_project_inliers_node
+[35.021s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/lib/pcl_ros/filter_radius_outlier_removal_node
+[35.021s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/lib/pcl_ros/filter_statistical_outlier_removal_node
+[35.022s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/lib/pcl_ros/filter_crop_box_node
+[35.023s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/lib/pcl_ros/filter_voxel_grid_node
+[35.025s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/lib/pcl_ros/pcd_to_pointcloud
+[35.026s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/lib/pcl_ros/pointcloud_to_pcd
+[35.026s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/features/boundary.hpp
+[35.026s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/features/feature.hpp
+[35.027s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/features/fpfh.hpp
+[35.027s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/features/fpfh_omp.hpp
+[35.027s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/features/moment_invariants.hpp
+[35.028s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/features/normal_3d.hpp
+[35.028s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/features/normal_3d_omp.hpp
+[35.028s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/features/normal_3d_tbb.hpp
+[35.032s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/features/pfh.hpp
+[35.032s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/features/principal_curvatures.hpp
+[35.032s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/features/shot.hpp
+[35.032s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/features/shot_omp.hpp
+[35.032s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/features/vfh.hpp
+[35.033s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/filters/crop_box.hpp
+[35.033s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/filters/extract_indices.hpp
+[35.033s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/filters/filter.hpp
+[35.036s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/filters/passthrough.hpp
+[35.037s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/filters/project_inliers.hpp
+[35.037s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/filters/radius_outlier_removal.hpp
+[35.037s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/filters/statistical_outlier_removal.hpp
+[35.037s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/filters/voxel_grid.hpp
+[35.038s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/impl/transforms.hpp
+[35.038s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/io/bag_io.hpp
+[35.038s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/io/concatenate_data.hpp
+[35.038s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/io/concatenate_fields.hpp
+[35.038s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/io/pcd_io.hpp
+[35.038s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/pcl_node.hpp
+[35.039s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/point_cloud.hpp
+[35.039s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/publisher.hpp
+[35.039s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/segmentation/extract_clusters.hpp
+[35.039s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/segmentation/extract_polygonal_prism_data.hpp
+[35.039s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/segmentation/sac_segmentation.hpp
+[35.040s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/segmentation/segment_differences.hpp
+[35.043s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/surface/convex_hull.hpp
+[35.044s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/surface/moving_least_squares.hpp
+[35.044s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/include/pcl_ros/pcl_ros/transforms.hpp
+[35.044s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/plugins/nodelet/libpcl_ros_features.xml
+[35.044s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/plugins/nodelet/libpcl_ros_filters.xml
+[35.044s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/plugins/nodelet/libpcl_ros_io.xml
+[35.045s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/plugins/nodelet/libpcl_ros_segmentation.xml
+[35.045s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/plugins/nodelet/libpcl_ros_surface.xml
+[35.045s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/samples/data/.gitignore
+[35.045s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/samples/pcl_ros/features/sample_normal_3d.launch
+[35.046s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/samples/pcl_ros/filters/config/statistical_outlier_removal.rviz
+[35.046s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/samples/pcl_ros/filters/config/voxel_grid.rviz
+[35.046s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/samples/pcl_ros/filters/sample_statistical_outlier_removal.launch
+[35.046s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/samples/pcl_ros/filters/sample_voxel_grid.launch
+[35.046s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/samples/pcl_ros/io/sample_concatenate_data.launch
+[35.047s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/samples/pcl_ros/segmentation/sample_extract_clusters.launch
+[35.050s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/samples/pcl_ros/surface/sample_convex_hull.launch
+[35.051s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/environment/library_path.sh
+[35.051s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/environment/library_path.dsv
+[35.051s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/ament_index/resource_index/package_run_dependencies/pcl_ros
+[35.051s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/ament_index/resource_index/parent_prefix_path/pcl_ros
+[35.051s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/environment/ament_prefix_path.sh
+[35.052s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/environment/ament_prefix_path.dsv
+[35.052s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/environment/path.sh
+[35.052s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/environment/path.dsv
+[35.052s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/local_setup.bash
+[35.052s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/local_setup.sh
+[35.052s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/local_setup.zsh
+[35.053s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/local_setup.dsv
+[35.053s] -- Symlinking: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/package.dsv
+[35.083s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/ament_index/resource_index/packages/pcl_ros
+[35.084s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/ament_index/resource_index/rclcpp_components/pcl_ros
+[35.087s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/cmake/ament_cmake_export_include_directories-extras.cmake
+[35.088s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/cmake/ament_cmake_export_libraries-extras.cmake
+[35.088s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/cmake/ament_cmake_export_targets-extras.cmake
+[35.088s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/cmake/ament_cmake_export_dependencies-extras.cmake
+[35.088s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/cmake/pcl_rosConfig.cmake
+[35.089s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/cmake/pcl_rosConfig-version.cmake
+[35.089s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/package.xml
+[35.089s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/lib/libpcl_ros_tf.a
+[35.089s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/lib/libpcd_to_pointcloud_lib.so
+[35.090s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/lib/libpcl_ros_filters.so
+[35.092s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/lib/libpointcloud_to_pcd_lib.so
+[35.093s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/cmake/export_pcl_rosExport.cmake
+[35.094s] -- Up-to-date: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/pcl_ros/share/pcl_ros/cmake/export_pcl_rosExport-noconfig.cmake
+[35.102s] Invoked command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/pcl_ros' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake --install /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/pcl_ros

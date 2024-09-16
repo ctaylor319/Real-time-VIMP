@@ -1,0 +1,7 @@
+[31mCMake Error at CMakeLists.txt:46 (target_link_directories):
+  Cannot specify link directories for target
+  "/opt/ros/humble/lib/x86_64-linux-gnu/liboctomap.so" which is not built by
+  this project.
+
+[0m
+gmake: *** [Makefile:308: cmake_check_build_system] Error 1

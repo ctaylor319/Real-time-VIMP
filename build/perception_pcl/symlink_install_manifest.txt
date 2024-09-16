@@ -1,0 +1,15 @@
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/ament_index/resource_index/package_run_dependencies/perception_pcl
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/ament_index/resource_index/parent_prefix_path/perception_pcl
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/perception_pcl/environment/ament_prefix_path.sh
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/perception_pcl/environment/ament_prefix_path.dsv
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/perception_pcl/environment/path.sh
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/perception_pcl/environment/path.dsv
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/perception_pcl/local_setup.bash
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/perception_pcl/local_setup.sh
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/perception_pcl/local_setup.zsh
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/perception_pcl/local_setup.dsv
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/perception_pcl/package.dsv
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/ament_index/resource_index/packages/perception_pcl
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/perception_pcl/cmake/perception_pclConfig.cmake
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/perception_pcl/cmake/perception_pclConfig-version.cmake
+/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/perception_pcl/share/perception_pcl/package.xml

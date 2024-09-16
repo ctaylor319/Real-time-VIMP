@@ -1,0 +1,7 @@
+[01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/env_construction/src/raw_env_data_collect.cpp:[m[K In destructor ‘[01m[Kvirtual EnvDataCollect::~EnvDataCollect()[m[K’:
+[01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/env_construction/src/raw_env_data_collect.cpp:64:37:[m[K [01;31m[Kerror: [m[Konly constructors take member initializers
+   64 | EnvDataCollect::~EnvDataCollect() : [01;31m[KNode[m[K("env_data_collect")
+      |                                     [01;31m[K^~~~[m[K
+gmake[2]: *** [CMakeFiles/raw_env_data_collect.dir/build.make:76: CMakeFiles/raw_env_data_collect.dir/src/raw_env_data_collect.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/raw_env_data_collect.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

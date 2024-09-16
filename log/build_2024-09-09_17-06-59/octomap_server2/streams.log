@@ -1,0 +1,226 @@
+[0.045s] Invoking command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/octomap_server2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2 -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2
+[0.100s] -- Found ament_cmake: 1.3.10 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.320s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.481s] -- Found rclcpp: 16.0.10 (/opt/ros/humble/share/rclcpp/cmake)
+[1.303s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[1.399s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[1.431s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[1.483s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.566s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.948s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[1.978s] -- Found rmw_fastrtps_cpp: 6.2.7 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[2.625s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[2.944s] -- Found rclcpp_components: 16.0.10 (/opt/ros/humble/share/rclcpp_components/cmake)
+[3.259s] -- Eigen found (include: /usr/include/eigen3, version: 3.4.0)
+[3.331s] -- FLANN found (include: /usr/include, lib: /usr/lib/x86_64-linux-gnu/libflann_cpp.so)
+[3.763s] -- Found Eigen3: /usr/include/eigen3 (found version "3.4.0") 
+[4.672s] -- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+[4.700s] -- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)
+[4.701s] [0m** WARNING ** io features related to pcap will be disabled[0m
+[5.085s] -- Eigen found (include: /usr/include/eigen3, version: 3.4.0)
+[5.094s] -- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+[5.103s] -- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)
+[5.420s] -- Found Qhull version 8.0.2
+[5.749s] -- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+[6.020s] -- looking for PCL_COMMON
+[6.021s] -- looking for PCL_KDTREE
+[6.021s] -- looking for PCL_OCTREE
+[6.022s] -- looking for PCL_SEARCH
+[6.023s] -- looking for PCL_SAMPLE_CONSENSUS
+[6.023s] -- looking for PCL_FILTERS
+[6.024s] -- looking for PCL_2D
+[6.025s] -- looking for PCL_GEOMETRY
+[6.025s] -- looking for PCL_IO
+[6.026s] -- looking for PCL_FEATURES
+[6.028s] -- looking for PCL_ML
+[6.028s] -- looking for PCL_SEGMENTATION
+[6.029s] -- looking for PCL_VISUALIZATION
+[6.030s] -- looking for PCL_SURFACE
+[6.030s] -- looking for PCL_REGISTRATION
+[6.031s] -- looking for PCL_KEYPOINTS
+[6.037s] -- looking for PCL_TRACKING
+[6.037s] -- looking for PCL_RECOGNITION
+[6.037s] -- looking for PCL_STEREO
+[6.038s] -- looking for PCL_APPS
+[6.038s] -- looking for PCL_IN_HAND_SCANNER
+[6.039s] -- looking for PCL_MODELER
+[6.039s] -- looking for PCL_POINT_CLOUD_EDITOR
+[6.040s] -- looking for PCL_OUTOFCORE
+[6.040s] -- looking for PCL_PEOPLE
+[6.061s] -- Found sensor_msgs: 4.2.4 (/opt/ros/humble/share/sensor_msgs/cmake)
+[6.297s] -- Found nav_msgs: 4.2.4 (/opt/ros/humble/share/nav_msgs/cmake)
+[6.438s] -- Found visualization_msgs: 4.2.4 (/opt/ros/humble/share/visualization_msgs/cmake)
+[6.512s] -- Found std_srvs: 4.2.4 (/opt/ros/humble/share/std_srvs/cmake)
+[6.559s] -- Found pcl_conversions: 2.4.5 (/opt/ros/humble/share/pcl_conversions/cmake)
+[6.782s] -- Found octomap_msgs: 2.0.0 (/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_msgs/share/octomap_msgs/cmake)
+[6.903s] -- Found tf2: 0.25.7 (/opt/ros/humble/share/tf2/cmake)
+[6.917s] -- Found tf2_ros: 0.25.7 (/opt/ros/humble/share/tf2_ros/cmake)
+[7.002s] -- Found tf2_geometry_msgs: 0.25.7 (/opt/ros/humble/share/tf2_geometry_msgs/cmake)
+[7.005s] -- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)
+[7.006s] -- Found Eigen3: TRUE (found version "3.4.0") 
+[7.006s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[7.283s] -- Configuring done
+[8.667s] -- Generating done
+[8.674s] -- Build files have been written to: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/octomap_server2
+[8.699s] Invoked command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/octomap_server2' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2 -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2
+[8.702s] Invoking command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/octomap_server2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake --build /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/octomap_server2 -- -j8 -l8
+[8.787s] [35m[1mConsolidate compiler generated dependencies of target octomap_server[0m
+[8.804s] [35m[1mConsolidate compiler generated dependencies of target octomap_server2[0m
+[8.817s] [ 33%] Built target octomap_server
+[8.861s] [ 50%] [32mBuilding CXX object CMakeFiles/octomap_server2.dir/src/conversions.cpp.o[0m
+[8.861s] [ 66%] [32mBuilding CXX object CMakeFiles/octomap_server2.dir/src/transforms.cpp.o[0m
+[8.864s] [ 83%] [32mBuilding CXX object CMakeFiles/octomap_server2.dir/src/octomap_server.cpp.o[0m
+[10.041s] In file included from [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/include/octomap_server2/conversions.h:50[m[K,
+[10.041s]                  from [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/conversions.cpp:40[m[K:
+[10.041s] [01m[K/opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.h:35:2:[m[K [01;35m[Kwarning: [m[K#warning This header is obsolete, please include tf2_geometry_msgs/tf2_geometry_msgs.hpp instead [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wcpp-Wcpp]8;;[m[K]
+[10.041s]    35 | #[01;35m[Kwarning[m[K This header is obsolete, please include tf2_geometry_msgs/tf2_geometry_msgs.hpp instead
+[10.041s]       |  [01;35m[K^~~~~~~[m[K
+[13.268s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/conversions.cpp:[m[K In function ‘[01m[Kvoid octomap::pointsOctomapToPointCloud2(const point3d_list&, sensor_msgs::msg::PointCloud2&)[m[K’:
+[13.268s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/conversions.cpp:53:57:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kpoints[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[13.268s]    53 |     void pointsOctomapToPointCloud2([01;35m[Kconst point3d_list& points[m[K,
+[13.268s]       |                                     [01;35m[K~~~~~~~~~~~~~~~~~~~~^~~~~~[m[K
+[13.763s] In file included from [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/include/octomap_server2/conversions.h:50[m[K,
+[13.763s]                  from [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/include/octomap_server2/octomap_server.hpp:51[m[K,
+[13.763s]                  from [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:2[m[K:
+[13.763s] [01m[K/opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.h:35:2:[m[K [01;35m[Kwarning: [m[K#warning This header is obsolete, please include tf2_geometry_msgs/tf2_geometry_msgs.hpp instead [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wcpp-Wcpp]8;;[m[K]
+[13.763s]    35 | #[01;35m[Kwarning[m[K This header is obsolete, please include tf2_geometry_msgs/tf2_geometry_msgs.hpp instead
+[13.764s]       |  [01;35m[K^~~~~~~[m[K
+[17.952s] In file included from [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:2[m[K:
+[17.953s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/include/octomap_server2/octomap_server.hpp:[m[K In member function ‘[01m[Kvirtual void octomap_server::OctomapServer::handleNode(const iterator&)[m[K’:
+[17.953s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/include/octomap_server2/octomap_server.hpp:210:58:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kit[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[17.953s]   210 |         virtual void handleNode([01;35m[Kconst OcTreeT::iterator& it[m[K) {};
+[17.953s]       |                                 [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~^~[m[K
+[17.953s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/include/octomap_server2/octomap_server.hpp:[m[K In member function ‘[01m[Kvirtual void octomap_server::OctomapServer::handleNodeInBBX(const iterator&)[m[K’:
+[17.953s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/include/octomap_server2/octomap_server.hpp:211:63:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kit[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[17.953s]   211 |         virtual void handleNodeInBBX([01;35m[Kconst OcTreeT::iterator& it[m[K) {};
+[17.953s]       |                                      [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~^~[m[K
+[17.953s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/include/octomap_server2/octomap_server.hpp:[m[K In constructor ‘[01m[Koctomap_server::OctomapServer::OctomapServer(const rclcpp::NodeOptions&, std::string)[m[K’:
+[17.953s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/include/octomap_server2/octomap_server.hpp:148:14:[m[K [01;35m[Kwarning: [m[K‘[01m[Koctomap_server::OctomapServer::m_useColoredMap[m[K’ will be initialized after [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder-Wreorder]8;;[m[K]
+[17.953s]   148 |         bool [01;35m[Km_useColoredMap[m[K;
+[17.953s]       |              [01;35m[K^~~~~~~~~~~~~~~[m[K
+[17.954s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/include/octomap_server2/octomap_server.hpp:118:16:[m[K [01;35m[Kwarning: [m[K  ‘[01m[Kdouble octomap_server::OctomapServer::m_colorFactor[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder-Wreorder]8;;[m[K]
+[17.954s]   118 |         double [01;35m[Km_colorFactor[m[K;
+[17.954s]       |                [01;35m[K^~~~~~~~~~~~~[m[K
+[17.954s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:5:5:[m[K [01;35m[Kwarning: [m[K  when initialized here [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder-Wreorder]8;;[m[K]
+[17.954s]     5 |     [01;35m[KOctomapServer[m[K::OctomapServer(
+[17.954s]       |     [01;35m[K^~~~~~~~~~~~~[m[K
+[18.055s] In file included from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:24[m[K,
+[18.055s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40[m[K,
+[18.055s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24[m[K,
+[18.055s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20[m[K,
+[18.055s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25[m[K,
+[18.055s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18[m[K,
+[18.055s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20[m[K,
+[18.055s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37[m[K,
+[18.055s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25[m[K,
+[18.055s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21[m[K,
+[18.055s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155[m[K,
+[18.055s]                  from [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/include/octomap_server2/octomap_server.hpp:8[m[K,
+[18.055s]                  from [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:2[m[K:
+[18.055s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:[m[K In member function ‘[01m[Kvirtual void octomap_server::OctomapServer::insertCloudCallback(const ConstSharedPtr&)[m[K’:
+[18.055s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:341:50:[m[K [01;35m[Kwarning: [m[Kformat ‘[01m[K%s[m[K’ expects argument of type ‘[01m[Kchar*[m[K’, but argument 5 has type ‘[01m[Kstd::string[m[K’ {aka ‘[01m[Kstd::__cxx11::basic_string<char>[m[K’} [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat=-Wformat=]8;;[m[K]
+[18.056s]   341 |                 RCLCPP_ERROR(this->get_logger(), [01;35m[K"%s %"[m[K, msg, ex.what());
+[18.056s]       |                                                  [01;35m[K^~~~~~[m[K
+[18.056s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:341:52:[m[K [01;36m[Knote: [m[Kformat string is defined here
+[18.056s]   341 |                 RCLCPP_ERROR(this->get_logger(), "[01;36m[K%s[m[K %", msg, ex.what());
+[18.056s]       |                                                   [01;36m[K~^[m[K
+[18.056s]       |                                                    [01;36m[K|[m[K
+[18.056s]       |                                                    [01;36m[Kchar*[m[K
+[18.056s] In file included from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:24[m[K,
+[18.056s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40[m[K,
+[18.056s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24[m[K,
+[18.056s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20[m[K,
+[18.056s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25[m[K,
+[18.056s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18[m[K,
+[18.056s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20[m[K,
+[18.056s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37[m[K,
+[18.056s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25[m[K,
+[18.056s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21[m[K,
+[18.057s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155[m[K,
+[18.057s]                  from [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/include/octomap_server2/octomap_server.hpp:8[m[K,
+[18.057s]                  from [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:2[m[K:
+[18.057s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:341:50:[m[K [01;35m[Kwarning: [m[Kspurious trailing ‘[01m[K%[m[K’ in format [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat=-Wformat=]8;;[m[K]
+[18.057s]   341 |                 RCLCPP_ERROR(this->get_logger(), [01;35m[K"%s %"[m[K, msg, ex.what());
+[18.057s]       |                                                  [01;35m[K^~~~~~[m[K
+[18.057s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:341:54:[m[K [01;36m[Knote: [m[Kformat string is defined here
+[18.057s]   341 |                 RCLCPP_ERROR(this->get_logger(), "%s [01;36m[K%[m[K", msg, ex.what());
+[18.057s]       |                                                      [01;36m[K^[m[K
+[18.057s] In file included from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:24[m[K,
+[18.057s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40[m[K,
+[18.057s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24[m[K,
+[18.057s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20[m[K,
+[18.058s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25[m[K,
+[18.058s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18[m[K,
+[18.058s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20[m[K,
+[18.058s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37[m[K,
+[18.058s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25[m[K,
+[18.058s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21[m[K,
+[18.058s]                  from [01m[K/opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155[m[K,
+[18.058s]                  from [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/include/octomap_server2/octomap_server.hpp:8[m[K,
+[18.058s]                  from [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:2[m[K:
+[18.058s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:341:50:[m[K [01;35m[Kwarning: [m[Ktoo many arguments for format [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat-extra-args-Wformat-extra-args]8;;[m[K]
+[18.058s]   341 |                 RCLCPP_ERROR(this->get_logger(), [01;35m[K"%s %"[m[K, msg, ex.what());
+[18.058s]       |                                                  [01;35m[K^~~~~~[m[K
+[18.069s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:[m[K In member function ‘[01m[Kvirtual void octomap_server::OctomapServer::publishAll(const rclcpp::Time&)[m[K’:
+[18.069s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:595:28:[m[K [01;35m[Kwarning: [m[Kunused variable ‘[01m[Ksize[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable-Wunused-variable]8;;[m[K]
+[18.069s]   595 |                     double [01;35m[Ksize[m[K = it.getSize();
+[18.069s]       |                            [01;35m[K^~~~[m[K
+[18.077s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:[m[K In member function ‘[01m[Kvirtual bool octomap_server::OctomapServer::octomapBinarySrv(std::shared_ptr<octomap_msgs::srv::GetOctomap_Request_<std::allocator<void> > >, std::shared_ptr<octomap_msgs::srv::GetOctomap_Response_<std::allocator<void> > >)[m[K’:
+[18.077s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:783:52:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kreq[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[18.077s]   783 |         [01;35m[Kconst std::shared_ptr<OctomapSrv::Request> req[m[K,
+[18.077s]       |         [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~[m[K
+[18.078s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:[m[K In member function ‘[01m[Kvirtual bool octomap_server::OctomapServer::octomapFullSrv(std::shared_ptr<octomap_msgs::srv::GetOctomap_Request_<std::allocator<void> > >, std::shared_ptr<octomap_msgs::srv::GetOctomap_Response_<std::allocator<void> > >)[m[K’:
+[18.078s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:802:52:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kreq[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[18.078s]   802 |         [01;35m[Kconst std::shared_ptr<OctomapSrv::Request> req[m[K,
+[18.078s]       |         [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~[m[K
+[18.083s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:[m[K In member function ‘[01m[Kbool octomap_server::OctomapServer::clearBBXSrv(std::shared_ptr<octomap_msgs::srv::BoundingBoxQuery_Request_<std::allocator<void> > >, std::shared_ptr<octomap_msgs::srv::BoundingBoxQuery_Response_<std::allocator<void> > >)[m[K’:
+[18.083s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:817:43:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kresp[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[18.083s]   817 |         [01;35m[Kstd::shared_ptr<BBXSrv::Response> resp[m[K) {
+[18.083s]       |         [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[18.087s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:[m[K In member function ‘[01m[Kbool octomap_server::OctomapServer::resetSrv(std::shared_ptr<std_srvs::srv::Empty_Request_<std::allocator<void> > >, std::shared_ptr<std_srvs::srv::Empty_Response_<std::allocator<void> > >)[m[K’:
+[18.087s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:855:28:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kstd::vector<visualization_msgs::msg::Marker_<std::allocator<void> >, std::allocator<visualization_msgs::msg::Marker_<std::allocator<void> > > >::size_type[m[K’ {aka ‘[01m[Klong unsigned int[m[K’} [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wsign-compare-Wsign-compare]8;;[m[K]
+[18.087s]   855 |         for (auto i = 0; [01;35m[Ki < occupiedNodesVis.markers.size()[m[K; ++i){
+[18.088s]       |                          [01;35m[K~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[18.088s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:871:28:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kstd::vector<visualization_msgs::msg::Marker_<std::allocator<void> >, std::allocator<visualization_msgs::msg::Marker_<std::allocator<void> > > >::size_type[m[K’ {aka ‘[01m[Klong unsigned int[m[K’} [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wsign-compare-Wsign-compare]8;;[m[K]
+[18.088s]   871 |         for (auto i = 0; [01;35m[Ki < freeNodesVis.markers.size()[m[K; ++i) {
+[18.088s]       |                          [01;35m[K~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[18.088s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:835:62:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kreq[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[18.088s]   835 |         [01;35m[Kconst std::shared_ptr<std_srvs::srv::Empty::Request> req[m[K,
+[18.088s]       |         [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~[m[K
+[18.089s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:836:57:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kresp[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[18.089s]   836 |         [01;35m[Kstd::shared_ptr<std_srvs::srv::Empty::Response> resp[m[K) {
+[18.089s]       |         [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[18.117s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:[m[K In member function ‘[01m[Kvirtual void octomap_server::OctomapServer::handlePreNodeTraversal(const rclcpp::Time&)[m[K’:
+[18.117s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:1163:59:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kunsigned int[m[K’ and ‘[01m[Kint[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wsign-compare-Wsign-compare]8;;[m[K]
+[18.117s]  1163 |                 for (unsigned int j = mapUpdateBBXMinY; [01;35m[Kj <= mapUpdateBBXMaxY[m[K; ++j) {
+[18.117s]       |                                                         [01;35m[K~~^~~~~~~~~~~~~~~~~~~[m[K
+[18.118s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:[m[K In member function ‘[01m[Kvirtual void octomap_server::OctomapServer::handlePostNodeTraversal(const rclcpp::Time&)[m[K’:
+[18.118s] [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/octomap_server2/src/octomap_server.cpp:1173:29:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Krostime[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[18.119s]  1173 |         [01;35m[Kconst rclcpp::Time& rostime[m[K){
+[18.119s]       |         [01;35m[K~~~~~~~~~~~~~~~~~~~~^~~~~~~[m[K
+[41.369s] [100%] [32m[1mLinking CXX shared library liboctomap_server2.so[0m
+[49.711s] [100%] Built target octomap_server2
+[49.752s] Invoked command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/octomap_server2' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake --build /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/octomap_server2 -- -j8 -l8
+[50.138s] Invoking command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/octomap_server2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake --install /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/octomap_server2
+[50.194s] -- Install configuration: ""
+[50.195s] -- Execute custom install script
+[50.196s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/lib/octomap_server2/octomap_server
+[50.197s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/lib/liboctomap_server2.so
+[50.198s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/octomap_server2//launch/octomap_server_launch.py
+[50.200s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/ament_index/resource_index/package_run_dependencies/octomap_server2
+[50.200s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/ament_index/resource_index/parent_prefix_path/octomap_server2
+[50.200s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/octomap_server2/environment/ament_prefix_path.sh
+[50.201s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/octomap_server2/environment/ament_prefix_path.dsv
+[50.201s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/octomap_server2/environment/path.sh
+[50.201s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/octomap_server2/environment/path.dsv
+[50.205s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/octomap_server2/local_setup.bash
+[50.205s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/octomap_server2/local_setup.sh
+[50.205s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/octomap_server2/local_setup.zsh
+[50.206s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/octomap_server2/local_setup.dsv
+[50.206s] -- Symlinking: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/octomap_server2/package.dsv
+[50.267s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/ament_index/resource_index/packages/octomap_server2
+[50.267s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/ament_index/resource_index/rclcpp_components/octomap_server2
+[50.269s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/octomap_server2/cmake/octomap_server2Config.cmake
+[50.269s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/octomap_server2/cmake/octomap_server2Config-version.cmake
+[50.270s] -- Up-to-date symlink: /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/install/octomap_server2/share/octomap_server2/package.xml
+[50.283s] Invoked command in '/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/octomap_server2' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/ctaylor71023/ws_moveit/install/moveit_configs_utils:/home/ctaylor71023/ws_moveit/install/launch_param_builder:/home/ctaylor71023/turtlebot3_ws/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/install/Crossfire_chase_object:/home/ctaylor71023/turtlebot3_ws/src/install/py_subpub:/home/ctaylor71023/turtlebot3_ws/src/install/Lab2:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_object_follower:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_navigate_to_goal:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab6:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_lab5:/home/ctaylor71023/turtlebot3_ws/src/install/Crossfire_chase_object:/opt/ros/humble /usr/bin/cmake --install /home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/build/octomap_server2
