@@ -1,9 +1,0 @@
-/usr/bin/ld: CMakeFiles/raw_env_data_collect.dir/src/raw_env_data_collect.cpp.o: warning: relocation against `_ZTV14EnvDataCollect' in read-only section `.text'
-/usr/bin/ld: CMakeFiles/raw_env_data_collect.dir/src/raw_env_data_collect.cpp.o: in function `EnvDataCollect::EnvDataCollect()':
-raw_env_data_collect.cpp:(.text+0x100): undefined reference to `vtable for EnvDataCollect'
-/usr/bin/ld: raw_env_data_collect.cpp:(.text+0x382): undefined reference to `EnvDataCollect::timerCallback()'
-/usr/bin/ld: warning: creating DT_TEXTREL in a PIE
-collect2: error: ld returned 1 exit status
-gmake[2]: *** [CMakeFiles/raw_env_data_collect.dir/build.make:480: raw_env_data_collect] Error 1
-gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/raw_env_data_collect.dir/all] Error 2
-gmake: *** [Makefile:146: all] Error 2

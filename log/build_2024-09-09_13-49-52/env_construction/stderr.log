@@ -1,7 +1,0 @@
-[01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/env_construction/src/raw_env_data_collect.cpp:[m[K In constructor ‘[01m[KEnvDataCollect::EnvDataCollect()[m[K’:
-[01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/env_construction/src/raw_env_data_collect.cpp:35:51:[m[K [01;31m[Kerror: [m[K‘[01m[KExampleJointTrajectoryPublisherCpp[m[K’ has not been declared
-   35 |         timer_ = create_wall_timer(5s, std::bind(&[01;31m[KExampleJointTrajectoryPublisherCpp[m[K::timerCallback, this));
-      |                                                   [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
-gmake[2]: *** [CMakeFiles/raw_env_data_collect.dir/build.make:76: CMakeFiles/raw_env_data_collect.dir/src/raw_env_data_collect.cpp.o] Error 1
-gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/raw_env_data_collect.dir/all] Error 2
-gmake: *** [Makefile:146: all] Error 2

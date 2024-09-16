@@ -1,8 +1,0 @@
-In file included from [01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/env_construction/src/raw_env_data_collect.cpp:24[m[K:
-[01m[K/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/env_construction/include/env_construction/raw_env_data_collect.h:41:2:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K;[m[K’ after class definition
-   41 | }
-      |  [01;31m[K^[m[K
-      |  [32m[K;[m[K
-gmake[2]: *** [CMakeFiles/raw_env_data_collect.dir/build.make:76: CMakeFiles/raw_env_data_collect.dir/src/raw_env_data_collect.cpp.o] Error 1
-gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/raw_env_data_collect.dir/all] Error 2
-gmake: *** [Makefile:146: all] Error 2
