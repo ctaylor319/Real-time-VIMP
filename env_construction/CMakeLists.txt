@@ -5,7 +5,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find dependencies
+# Dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(PCL REQUIRED)
@@ -18,8 +18,7 @@ find_package(grid_map_msgs REQUIRED)
 find_package(grid_map_octomap REQUIRED)
 find_package(grid_map_ros REQUIRED)
 
-# Define a CMake variable named dependencies that lists all
-# ROS 2 packages and other dependencies the project requires.
+# Add dependencies to variable
 set(dependencies
   rclcpp
   PCL
@@ -38,6 +37,8 @@ set(dependencies
 # projects where you have custom header files that are not located
 # in the standard system include paths.
 include_directories(dependencies)
+
+# Source code include directory
 include_directories(include/env_construction)
 
 # Tells CMake to create executable targets. Make sure CMake

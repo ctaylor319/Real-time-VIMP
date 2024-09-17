@@ -52,6 +52,13 @@ add_executable(publish_final_trajectory src/publish_final_trajectory.cpp)
 ament_target_dependencies(add_time_parameterization ${dependencies})
 ament_target_dependencies(publish_final_trajectory ${dependencies})
 
+# Install cpp executables
+install(
+  TARGETS
+  add_time_parameterization
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights

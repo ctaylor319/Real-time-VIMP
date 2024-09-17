@@ -22,7 +22,7 @@
 #include <moveit_msgs/msg/robot_trajectory.h>
 #include <urdf_parser/urdf_parser.h>
 
-#include "add_time_parameterization.h"
+#include "publish_final_trajectory.h"
 
 using namespace std::chrono_literals;
 

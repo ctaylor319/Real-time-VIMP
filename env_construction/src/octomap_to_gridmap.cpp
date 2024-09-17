@@ -19,7 +19,7 @@
 
 using namespace std::chrono_literals;
 
-MapConversion::MapConversion() : Node( "octomap_to_gridmap" ){
+MapConversion::MapConversion() : Node("octomap_to_gridmap"){
 
     _octomap_subscriber = create_subscription< octomap_msgs::msg::Octomap >( "/octomap_full", 10,
         std::bind(&MapConversion::timerCallback, this, std::placeholders::_1) );
@@ -32,7 +32,7 @@ MapConversion::~MapConversion()
 
 }
 
-void MapConversion::timerCallback( octomap_msgs::msg::Octomap msg ) const
+void MapConversion::octomapCallback ( octomap_msgs::msg::Octomap msg ) const
 {
     grid_map::GridMap gridMap( {"elevation"} ); //create grid map with 3D elevation layer
     gridMap.setBasicLayers( {"elevation"} );
@@ -46,9 +46,9 @@ void MapConversion::timerCallback( octomap_msgs::msg::Octomap msg ) const
     octomap->getMetricMax( max_bound(0), max_bound(1), max_bound(2) );
 
     bool res = grid_map::GridMapOctomapConverter::fromOctomap( *octomap, "elevation", gridMap, &min_bound, &max_bound );
-    if( res ) {
-        auto out_msg = grid_map::GridMapRosConverter::toMessage( gridMap );
-        _gridmap_publisher->publish( std::move(out_msg) );
+    if ( res ) {
+        auto out_msg = grid_map::GridMapRosConverter::toMessage(gridMap);
+        _gridmap_publisher->publish(std::move(out_msg));
     }
     else {
         std::cout << "Failed to convert octomap to grid_map" << std::endl;

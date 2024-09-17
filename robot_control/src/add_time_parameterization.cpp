@@ -26,39 +26,52 @@
 
 using namespace std::chrono_literals;
 
-AddTimeParameterization::AddTimeParameterization() : Node("env_data_collect"){
+AddTimeParameterization::AddTimeParameterization() : Node("add_time_parameterization"){
+
+    // Default parameters for urdf and srdf paths
+    // Note that urdf_path MUST BE a .urdf file, not a .urdf.xacro file. Use the xacro package to convert to .urdf if needed
+    std::string default_urdf_path = "/home/ctaylor71023/ros2_ws/src/mycobot_ros2/mycobot_gazebo/urdf/mycobot_280_classic_gazebo.urdf";
+    std::string default_srdf_path = "/home/ctaylor71023/ros2_ws/src/mycobot_ros2/mycobot_gazebo/moveit_setup/config/mycobot_280.srdf";
+
+    this->declare_parameter("urdf_path", default_urdf_path);
+    this->declare_parameter("srdf_path", default_srdf_path);
+
+    std::string urdf_path = this->get_parameter("urdf_path").as_string();
+    std::string srdf_path = this->get_parameter("srdf_path").as_string();
+
+    if ( urdf_path.compare(default_urdf_path) == 0 || srdf_path.compare(default_srdf_path) == 0 ) {
+        std::cout << "WARNING: Using default urdf and/or srdf file locations.\nProper usage: ";
+        std::cout << "ros2 launch robot_control launch_robot_autonomy.launch.py --ros-args -p";
+        std::cout << "urdf_path:=<path to urdf file> -p srdf_path:=<path to srdf file>" << std::endl;
+        std::cout << "Alternatively, you can change the default path locations in";
+        std::cout << "robot_control/src/add_time_parameterization.cpp" << std::endl;
+    }
+
+    _time_param_traj = new trajectory_processing::TimeOptimalTrajectoryGeneration();
     // Create the publisher of the desired arm and gripper goal poses
-    arm_pose_publisher_ = create_publisher<trajectory_msgs::msg::JointTrajectory>("/arm_controller/joint_trajectory", 1);
-    gripper_pose_publisher_ = create_publisher<trajectory_msgs::msg::JointTrajectory>("/grip_controller/joint_trajectory", 1);
+    _pose_publisher = create_publisher<trajectory_msgs::msg::JointTrajectory>("/joint_trajectory", 10);
 
     // Create a timer to periodically call the timerCallback function
-    timer_ = create_wall_timer(5s, std::bind(&AddTimeParameterization::timerCallback, this));
+    _timer = create_wall_timer(5s, std::bind(&AddTimeParameterization::VIMPCallback, this));
 
-    frame_id_ = "base_link";
+    _frame_id = "base_link";
 
-    // Desired time from the trajectory start to arrive at the trajectory point.
-    // Needs to be less than or equal to the timer period above to allow
-    // the robotic arm to smoothly transition between points.
-    duration_sec_ = 2;
-    duration_nanosec_ = 0.5 * 1e9;  // (seconds * 1e9)
-
+    // Scraped from moveit source code, really only need max vel/accel from model files for time
+    // parameterization but you still need this setup
+    urdf::ModelInterfaceSharedPtr urdf = urdf::parseURDFFile(urdf_path);
+    srdf::ModelSharedPtr srdf = std::make_shared<srdf::Model>();
+    srdf->initFile(*urdf, srdf_path);
+    _model = std::make_shared<moveit::core::RobotModel>(urdf, srdf);
+    _group = _model->getJointModelGroup("robot_arm");
+    _robot_traj = new robot_trajectory::RobotTrajectory(_model, _group);
     // Set the desired goal poses for the robotic arm.
-    arm_positions_ = {
+    _arm_positions = {
         {0.0, 0.0, 0.0, 0.0, 0.0, 0.0},  // Home location
-        {-1.345, -1.23, 0.264, -0.296, 0.389, -1.5},  // Goal location
-        {-1.345, -1.23, 0.264, -0.296, 0.389, -1.5},
-        {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}  // Home location
-    };
-
-    gripper_positions_ = {
-        {0.0},  // Open gripper
-        {0.0},
-        {-0.70},  // Close gripper
-        {-0.70}
+        {-1.345, -1.23, 0.264, -0.296, 0.389, -1.5}  // Goal location
     };
 
     // Keep track of the current trajectory we are executing
-    index_ = 0;
+    _index = 0;
 }
 
 AddTimeParameterization::~AddTimeParameterization()
@@ -66,16 +79,12 @@ AddTimeParameterization::~AddTimeParameterization()
 
 }
 
-void AddTimeParameterization::timerCallback()
+void AddTimeParameterization::VIMPCallback()
 {
     // Create new JointTrajectory messages for arm and gripper
     auto msg_arm = trajectory_msgs::msg::JointTrajectory();
-    msg_arm.header.frame_id = frame_id_;
+    msg_arm.header.frame_id = _frame_id;
     msg_arm.joint_names = arm_joints;
-
-    auto msg_gripper = trajectory_msgs::msg::JointTrajectory();
-    msg_gripper.header.frame_id = frame_id_;
-    msg_gripper.joint_names = gripper_joints;
 
     //////////////////////////////// NEW CODE ////////////////////////////////
     // The following receives the path created from our motion planner and time-discretizes it
@@ -83,62 +92,42 @@ void AddTimeParameterization::timerCallback()
     // This can then be fed into the JointTrajectoryController (or the plugin for the simulation),
     // Which will command the joints.
 
-    std::string urdf_path = ""; // Absolute paths
-    std::string srdf_path = "";
-
-    // Scraped from moveit source code, really only need max vel/accel from model files for time
-    // parameterization but you still need this setup
-    moveit::core::RobotModelConstPtr model;
-    urdf::ModelInterfaceSharedPtr urdf = urdf::parseURDFFile(urdf_path);
-    srdf::ModelSharedPtr srdf = std::make_shared<srdf::Model>();
-    srdf->initFile(*urdf, srdf_path);
-    model = std::make_shared<moveit::core::RobotModel>(urdf, srdf);
-    robot_trajectory::RobotTrajectory robot_traj(model);
-
     // Define a waypoint for the robot and add it to the trajectory. Waypoints can be passed in as vectors,
     // meaning they can be passed in from GVIMP output
-    moveit::core::RobotState robot_waypoint(model);
-    const moveit::core::JointModelGroup* group = model->getJointModelGroup("robot_arm");
+    moveit::core::RobotState robot_waypoint(_model);
     robot_waypoint.setToDefaultValues();
     double dt = 0.05; // Time step the algorithm takes for intermediate waypoints, essentially determines how precise you want your time steps
 
     // ADD WAYPOINTS HERE
-    std::vector<double> waypoint = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    robot_waypoint.setJointGroupPositions(group, waypoint);
-    robot_traj.addSuffixWayPoint(robot_waypoint, dt);
-
+    for ( auto waypoint : _arm_positions ) {
+        robot_waypoint.setJointGroupPositions(_group, waypoint);
+        _robot_traj->addSuffixWayPoint(robot_waypoint, dt);
+    }
+    
     double max_vel_scaling = 1.0; // Scaling factors range between 0-1 and can slow down trajectory, just keep them normal unless otherwise needed
     double max_accel_scaling = 1.0;
-    time_param_traj->computeTimeStamps(robot_traj, max_vel_scaling, max_accel_scaling);
-    
-
-    //test1->computeTimeStamps(test2)
-
+    _time_param_traj->computeTimeStamps(*_robot_traj, max_vel_scaling, max_accel_scaling);
     //////////////////////////////// NEW CODE ////////////////////////////////
 
     // Create JointTrajectoryPoints for arm and gripper
     auto point_arm = trajectory_msgs::msg::JointTrajectoryPoint();
-    point_arm.positions = arm_positions_[index_];
-    point_arm.time_from_start = rclcpp::Duration(duration_sec_, duration_nanosec_);
+    point_arm.positions = _arm_positions[_index];
+    std::chrono::nanoseconds waypoint_time_from_start(int(_robot_traj->getWayPointDurationFromStart(_index)));
+    point_arm.time_from_start = rclcpp::Duration(waypoint_time_from_start);
     msg_arm.points.push_back(point_arm);
-    arm_pose_publisher_->publish(msg_arm);
-
-    auto point_gripper = trajectory_msgs::msg::JointTrajectoryPoint();
-    point_gripper.positions = gripper_positions_[index_];
-    point_gripper.time_from_start = rclcpp::Duration(duration_sec_, duration_nanosec_);
-    msg_gripper.points.push_back(point_gripper);
-    gripper_pose_publisher_->publish(msg_gripper);
+    _pose_publisher->publish(msg_arm);
 
     // Reset the index 
-    if (index_ == arm_positions_.size() - 1) {
-        index_ = 0;
+    if ( _index == _arm_positions.size() - 1 ) {
+        _index = 0;
     } else {
-        index_++;
+        _index++;
     }
 }
 
-int main(int argc, char * argv[])
+int main ( int argc, char * argv[] )
 {
+
     // Initialize the ROS 2 client library
     rclcpp::init(argc, argv);
 
