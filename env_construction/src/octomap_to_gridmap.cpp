@@ -22,7 +22,7 @@ using namespace std::chrono_literals;
 MapConversion::MapConversion() : Node("octomap_to_gridmap"){
 
     _octomap_subscriber = create_subscription< octomap_msgs::msg::Octomap >( "/octomap_full", 10,
-        std::bind(&MapConversion::timerCallback, this, std::placeholders::_1) );
+        std::bind(&MapConversion::octomapCallback, this, std::placeholders::_1) );
     _gridmap_publisher = create_publisher<grid_map_msgs::msg::GridMap>( "/gridmap_full", 10 );
 
 }
