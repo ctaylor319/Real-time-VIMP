@@ -11,7 +11,6 @@
 #include <memory>
 #include <string>
 
-#include <trajectory_msgs/msg/joint_trajectory.hpp>
 #include <moveit/trajectory_processing/time_optimal_trajectory_generation.h>
 #include <urdf_parser/urdf_parser.h>
 

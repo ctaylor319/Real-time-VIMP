@@ -8,7 +8,9 @@
  *
  */
 
-#include "rclcpp/rclcpp.hpp"
+#include <rclcpp/rclcpp.hpp>
+#include <trajectory_msgs/msg/joint_trajectory.hpp>
+#include <control_msgs/msg/joint_trajectory_controller_state.hpp>
 
 // arm group names
 const std::vector<std::string> arm_joints = {

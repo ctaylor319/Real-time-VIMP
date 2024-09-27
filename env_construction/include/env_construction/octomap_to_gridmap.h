@@ -8,11 +8,9 @@
  *
  */
 
-#include "rclcpp/rclcpp.hpp"
-#include "octomap/octomap.h"
-#include "octomap_msgs/msg/octomap.hpp"
-#include "grid_map_core/GridMap.hpp"
-#include "grid_map_msgs/msg/grid_map.hpp"
+#include <rclcpp/rclcpp.hpp>
+#include <octomap_msgs/msg/octomap.hpp>
+#include <grid_map_msgs/msg/grid_map.hpp>
 
 class MapConversion : public rclcpp::Node
 {

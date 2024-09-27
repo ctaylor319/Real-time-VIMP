@@ -10,3 +10,7 @@
 	path = perception_pcl
 	url = https://github.com/ros-perception/perception_pcl.git
 	branch = ros2
+[submodule "motion_planning/VIMP"]
+	path = motion_planning/VIMP
+	url = https://github.com/hzyu17/VIMP.git
+	branch = master

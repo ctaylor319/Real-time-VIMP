@@ -8,7 +8,8 @@
  *
  */
 
-#include "rclcpp/rclcpp.hpp"
+#include <rclcpp/rclcpp.hpp>
+#include <trajectory_msgs/msg/joint_trajectory.hpp>
 
 // arm group names
 const std::vector<std::string> arm_joints = {

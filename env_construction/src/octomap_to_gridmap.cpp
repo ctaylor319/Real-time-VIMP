@@ -11,6 +11,8 @@
 #include <memory>
 #include <string>
 
+#include <octomap/octomap.h>
+#include <grid_map_core/GridMap.hpp>
 #include <octomap_msgs/conversions.h>
 #include <grid_map_octomap/GridMapOctomapConverter.hpp>
 #include <grid_map_ros/grid_map_ros.hpp>
