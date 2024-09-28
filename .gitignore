@@ -4,3 +4,4 @@
 build/*
 install/*
 log/*
+motion_planning/VIMP/build/*
