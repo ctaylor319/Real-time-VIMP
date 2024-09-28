@@ -22,8 +22,8 @@ AddTimeParameterization::AddTimeParameterization() : Node("add_time_parameteriza
 
     // Default parameters for urdf and srdf paths
     // Note that urdf_path MUST BE a .urdf file, not a .urdf.xacro file. Use the xacro package to convert to .urdf if needed
-    std::string default_urdf_path = "/home/ctaylor71023/ros2_ws/src/mycobot_ros2/mycobot_gazebo/urdf/mycobot_280_classic_gazebo.urdf";
-    std::string default_srdf_path = "/home/ctaylor71023/ros2_ws/src/mycobot_ros2/mycobot_gazebo/moveit_setup/config/mycobot_280.srdf";
+    std::string default_urdf_path = "/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/gazebo_simulation/urdf/mycobot_280_classic_gazebo.urdf";
+    std::string default_srdf_path = "/home/ctaylor71023/ros2_ws/src/ctaylor319_capstone/gazebo_simulation/moveit_setup/config/mycobot_280.srdf";
 
     this->declare_parameter("urdf_path", default_urdf_path);
     this->declare_parameter("srdf_path", default_srdf_path);

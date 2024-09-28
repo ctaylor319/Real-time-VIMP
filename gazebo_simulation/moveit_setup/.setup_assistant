@@ -1,0 +1,25 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: mycobot_gazebo
+    relative_path: urdf/mycobot_280_classic_gazebo.urdf.xacro
+  srdf:
+    relative_path: config/mycobot_280.srdf
+  package_settings:
+    author_name: Christopher Taylor
+    author_email: ctaylor319@gatech.edu
+    generated_timestamp: 1725575289
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
