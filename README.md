@@ -7,11 +7,19 @@ Capstone project for Georgia Tech's MS-ROBO program. Implements hzyu17's motion-
  - octomap repository. This can be installed with binary rpm packages (`ros-${ROS_DISTRO}-octomap*`).
  - 3D Lidar sensor, or equivalent depth sensor. 
 ## Building
-  - TBD
-  - Clone the repo (`git clone https://github.com/ctaylor319/Real-time-VIMP.git`)
-  - Install dependencies (`vcs import . < dependencies.repos`)
+  - Clone the repo
+    - `cd ~/ros2_ws/src` (or whichever workspace you prefer)
+    - `git clone https://github.com/ctaylor319/Real-time-VIMP.git`
+  - Install dependencies
+    - `vcs import . < dependencies.repos`
+    - `rm -rf grid_map/grid_map_sdf && mv -r grid_map_fix/grid_map_sdf/ grid_map/`
+    - `sudo apt update && rosdep install -r --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y`
+    - Will also need MATLAB Runtime Library (version R2020b) for VIMP. Check that the MATLAB base path is correct in VIMP's CMakeFiles.txt.
+  - Build packages
+    - `colcon build`
+
 
 ## Launching
   - TBD
-  - Depth sensor must publish pointcloud2 messages to the /cloud\_in topic.
-  - ros2 launch octomap\_server2 octomap\_server\_launch.py launches the octomap service.
+  - Depth sensor must publish pointcloud2 messages to the `/cloud_in` topic.
+  - `ros2 launch octomap\_server2 octomap\_server\_launch.py` processes lidar input
