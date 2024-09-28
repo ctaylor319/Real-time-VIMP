@@ -8,9 +8,10 @@ Capstone project for Georgia Tech's MS-ROBO program. Implements hzyu17's motion-
  - 3D Lidar sensor, or equivalent depth sensor. 
 ## Building
   - TBD
-  - grid_map needs to be modified. Copy over the grid_map_sdf package in the grid_map repo with the provided grid_map_sdf package within `./build_dependencies/`. Explanation: the humble branch does not have an updated SDF algorithm, so the grid_map_sdf repo from the master branch needs to be copied over. However, the master branch is ROS1, so it isn't compatible with the rest of this repo. The provided grid_map_sdf translates the algorithm into ROS2 for you.
+  - Clone the repo (`git clone https://github.com/ctaylor319/Real-time-VIMP.git`)
+  - Install dependencies (`vcs import . < dependencies.repos`)
 
 ## Launching
   - TBD
-  - Depth sensor must publish pointcloud2 messages to the /cloud_in topic.
-  - ros2 launch octomap_server2 octomap_server_launch.py launches the octomap service.
+  - Depth sensor must publish pointcloud2 messages to the /cloud\_in topic.
+  - ros2 launch octomap\_server2 octomap\_server\_launch.py launches the octomap service.
