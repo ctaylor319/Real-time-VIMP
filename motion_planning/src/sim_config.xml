@@ -1,0 +1,5 @@
+<config>
+	<goal>0.0 0.0 0.0 0.0 0.0 0.0</goal>
+	<urdf>mycobot_280_classic_gazebo.urdf</urdf>
+	<srdf>mycobot_280.srdf</srdf>
+</config>

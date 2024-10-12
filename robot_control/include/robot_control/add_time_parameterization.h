@@ -1,5 +1,5 @@
 /**
- * Georgia Institute of Technology, 2024
+ * @copyright Georgia Institute of Technology, 2024
  * @file: add_time_parameterization.h
  * @author: ctaylor319@gatech.edu
  * @date: 09/16/2024

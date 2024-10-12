@@ -19,6 +19,9 @@ find_package(xacro REQUIRED)
 find_package(moveit REQUIRED)
 find_package(moveit_core REQUIRED)
 find_package(octomap REQUIRED)
+find_package(Poco REQUIRED XML Util)
+
+add_compile_definitions("INSTALL_DIR=${CMAKE_INSTALL_PREFIX}")
 
 # Define a CMake variable named dependencies that lists all
 # ROS 2 packages and other dependencies the project requires.
@@ -33,6 +36,7 @@ set(dependencies
   mycobot_gazebo
   moveit
   moveit_core
+  Poco
 )
 
 # Add the specified directories to the list of paths that the compiler

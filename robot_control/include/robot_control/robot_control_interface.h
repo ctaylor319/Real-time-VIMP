@@ -1,5 +1,5 @@
 /**
- * Georgia Institute of Technology, 2024
+ * @copyright Georgia Institute of Technology, 2024
  * @file: robot_control_interface.h
  * @author: ctaylor319@gatech.edu
  * @date: 09/17/2024

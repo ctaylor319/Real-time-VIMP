@@ -1,5 +1,5 @@
 /**
- * Georgia Institute of Technology, 2024
+ * @copyright Georgia Institute of Technology, 2024
  * @file: octomap_to_gridmap.cpp
  * @author: ctaylor319@gatech.edu
  * @date: 09/12/2024
@@ -21,26 +21,30 @@
 
 using namespace std::chrono_literals;
 
-MapConversion::MapConversion() : Node("octomap_to_gridmap"){
-
-    _octomap_subscriber = create_subscription< octomap_msgs::msg::Octomap >( "/octomap_full", 10,
-        std::bind(&MapConversion::octomapCallback, this, std::placeholders::_1) );
-    _gridmap_publisher = create_publisher<grid_map_msgs::msg::GridMap>( "/gridmap_full", 10 );
-
+MapConversion::MapConversion() : Node( "octomap_to_gridmap" )
+{
+    _octomap_subscriber = create_subscription< octomap_msgs::msg::Octomap >( "/octomap_binary", 10,
+        std::bind( &MapConversion::octomapCallback, this, std::placeholders::_1 ) );
+    _gridmap_publisher = create_publisher<grid_map_msgs::msg::GridMap>( "/gridmap_binary", 10 );
 }
 
 MapConversion::~MapConversion()
 {
-
 }
 
 void MapConversion::octomapCallback ( octomap_msgs::msg::Octomap msg ) const
 {
     grid_map::GridMap gridMap( {"elevation"} ); //create grid map with 3D elevation layer
     gridMap.setBasicLayers( {"elevation"} );
+
     octomap::OcTree* octomap = nullptr;
-    octomap::AbstractOcTree* tree = octomap_msgs::msgToMap(msg);
-    octomap = dynamic_cast<octomap::OcTree*>(tree); // convert octomap message to an OcTree
+    octomap::AbstractOcTree* tree = octomap_msgs::msgToMap( msg );
+    if ( tree ) {
+        octomap = dynamic_cast<octomap::OcTree*>( tree ); // convert octomap message to an OcTree
+    } else {
+        std::cout << "Failed to call convert Octomap." << std::endl;
+        return;
+    }
 
     grid_map::Position3 min_bound;
     grid_map::Position3 max_bound;
@@ -49,8 +53,8 @@ void MapConversion::octomapCallback ( octomap_msgs::msg::Octomap msg ) const
 
     bool res = grid_map::GridMapOctomapConverter::fromOctomap( *octomap, "elevation", gridMap, &min_bound, &max_bound );
     if ( res ) {
-        auto out_msg = grid_map::GridMapRosConverter::toMessage(gridMap);
-        _gridmap_publisher->publish(std::move(out_msg));
+        auto out_msg = grid_map::GridMapRosConverter::toMessage( gridMap );
+        _gridmap_publisher->publish( std::move( out_msg ) );
     }
     else {
         std::cout << "Failed to convert octomap to grid_map" << std::endl;

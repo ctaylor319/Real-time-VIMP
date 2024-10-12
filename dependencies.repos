@@ -19,3 +19,7 @@ repositories:
     type: git
     url: https://github.com/ctaylor319/ctaylor319-Capstone-Dep-Pkgs.git
     version: master
+  ./poco:
+    type: git
+    url: https://github.com/pocoproject/poco.git
+    version: main
