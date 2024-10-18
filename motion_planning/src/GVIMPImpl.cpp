@@ -14,6 +14,7 @@
 #include <grid_map_core/GridMap.hpp>
 #include <grid_map_msgs/msg/grid_map.hpp>
 #include <std_msgs/msg/bool.hpp>
+#include <control_msgs/msg/joint_trajectory_controller_state.hpp>
 
 #include <grid_map_ros/grid_map_ros.hpp>
 #include <grid_map_sdf/SignedDistanceField.hpp>
@@ -33,6 +34,8 @@ GVIMPImpl::GVIMPImpl() : Node( "GVIMP_Impl" )
         std::bind( &GVIMPImpl::gridMapCallback, this, std::placeholders::_1 ) );
     _path_status_subscriber = create_subscription<std_msgs::msg::Bool>( "/curr_subpath_complete", 10,
         std::bind( &GVIMPImpl::pathStatusCallback, this, std::placeholders::_1 ) );
+    _robot_state_subscriber = create_subscription< control_msgs::msg::JointTrajectoryControllerState >( "/arm_controller/controller_state", 10,
+        std::bind( &GVIMPImpl::StateCallback, this, std::placeholders::_1 ) );
     _path_publisher = create_publisher<std_msgs::msg::Float32MultiArray>( "/vimp_path", 10 );
 
     _path_planner = std::unique_ptr<vimp::RobotArmMotionPlanner>( new vimp::RobotArmMotionPlanner() ); // Instance of the motion planner
@@ -73,16 +76,25 @@ void GVIMPImpl::pathStatusCallback ( std_msgs::msg::Bool msg )
     _new_path_needed = msg.data;
 }
 
+void GVIMPImpl::StateCallback ( control_msgs::msg::JointTrajectoryControllerState msg )
+{
+
+    trajectory_msgs::msg::JointTrajectoryPoint curr_state = msg.feedback;
+    std::vector<double> start_pos = curr_state.positions;
+    _start_pos = Map<VectorXd>(&start_pos[0], start_pos.size());
+}
+
 void GVIMPImpl::gridMapCallback ( grid_map_msgs::msg::GridMap msg )
 {
-    if ( _new_path_needed ) {
+    if ( _new_path_needed && _start_pos.size() > 0) {
         _new_path_needed = false;
         gpmp2::SignedDistanceField sdf = generateSDF( msg );
         std::pair<VectorXd, SpMat> res = _path_planner->findBestPath( _start_pos, _goal_pos, sdf );
-        
-        std_msgs::msg::Float32MultiArray best_path;
-        best_path.data = convertToRosFloat ( res.first );
-        _path_publisher->publish( best_path );
+        std::cout << res.first << std::endl;
+        std::cout << res.second << std::endl;
+        // std_msgs::msg::Float32MultiArray best_path;
+        // best_path.data = convertToRosFloat ( res.first );
+        // _path_publisher->publish( best_path );
     }
 }
 
@@ -116,29 +128,49 @@ gpmp2::SignedDistanceField GVIMPImpl::generateSDF ( grid_map_msgs::msg::GridMap 
     int row = 0; int col = 0; int z = 0;
     gm_sdf.filterPoints( [&](const grid_map::Position3&, float sdfValue, const grid_map::SignedDistanceField::Derivative3) {
         if ( row == 0 && col == 0 ) {
-            gtsam::Matrix temp = gtsam::Matrix::Zero( grid_size[0], grid_size[1] );
+            gtsam::Matrix temp = gtsam::Matrix::Zero( grid_size.y(), grid_size.x() );
             gpmp2_data.push_back( temp );
         }
-        else{
-            gpmp2_data[z](row, col) = static_cast<double>( sdfValue );
-        }
+        int y_end = grid_size.y()-1;
+        int x_end = grid_size.x()-1;
+        gpmp2_data[z](y_end-row, x_end-col) = static_cast<double>( sdfValue );
+        // std::cout << row << " " << col << " " << z << std::endl;
+        // std::cout << gpmp2_data[z](row, col) << std::endl;
         // Note: filterPoints has x as the innermost loop, so we must copy that structure
-        ++row;
+        ++col;
         // std::cout << sdfValue << " ";
-        if ( row == grid_size[0] ) {
-            row = 0;
-            ++col;
+        if ( col == grid_size.x() ) {
+            col = 0;
+            ++row;
             // std::cout << std::endl;
         }
-        if ( col == grid_size[1] ) {
-            col = 0;
+        if ( row == grid_size.y() ) {
+            row = 0;
             ++z;
-        }  
+        }
     } );
     
-    gtsam::Point3 origin( 0.0, 0.0, minVal ); // This is how the origin is set in grid_map_sdf
+    grid_map::Position gridOrigin;
+    gridMap.getPosition( Vector2i(0, 0), gridOrigin );
+    grid_map::Length len = gridMap.getLength();
 
+    gtsam::Point3 origin( gridOrigin.x()-len.x(), gridOrigin.y()-len.y(), minVal );
     gpmp2::SignedDistanceField gpmp2_sdf( origin, cell_size, gpmp2_data );
+
+    // for ( int z=0; z<7; ++z ) {
+    //     for ( int y=0; y<12; ++y ) {
+    //         for ( int x=0; x<12; ++x ) {
+    //             grid_map::Position3 gmTestPoint( double(x)/10.0, double(y)/10.0, double(z)/10.0 );
+    //             gtsam::Point3 gtsamTestPoint( double(x)/10.0, double(y)/10.0, double(z)/10.0 );
+
+    //             std::cout << x << " " << y << " " << z << std::endl;
+    //             std::cout << "grid_map test: " << gm_sdf.value(gmTestPoint) << std::endl;
+    //             std::cout << "gtsam test: " << gpmp2_sdf.getSignedDistance(gtsamTestPoint) << std::endl;
+    //             std::cout << std::endl;
+    //         }
+    //     }
+    // }
+
 
     return gpmp2_sdf;
 }

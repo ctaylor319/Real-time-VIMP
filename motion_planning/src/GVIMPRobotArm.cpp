@@ -15,12 +15,12 @@ using namespace vimp;
 
 RobotArmMotionPlanner::RobotArmMotionPlanner()
 {
-    double total_time = 5.0; int n_states = 25; double coeff_Qc = 1.0;
+    double total_time = 5.0; int n_states = 5; double coeff_Qc = 1.0;
     double sig_obs = 0.02; double eps_sdf = 0.2; double radius = 0.0;
     double step_size = 0.7; double init_precision_factor = 10000.0;
     double boundary_penalties = 10000.0; double temperature = 0.01;
-    double high_temperature = 0.2; int low_temp_iterations = 25;
-    double stop_err = 1e-5; int num_iter = 50; int max_n_backtracking = 5;
+    double high_temperature = 0.2; int low_temp_iterations = 5;
+    double stop_err = 1e-2; int num_iter = 10; int max_n_backtracking = 5;
     int GH_deg = 3; int nx = 12; int nu = 6;
     _params = GVIMPParams(nx, nu, total_time, n_states, coeff_Qc, GH_deg, sig_obs, 
                             eps_sdf, radius, step_size, num_iter, init_precision_factor, 
@@ -33,7 +33,7 @@ RobotArmMotionPlanner::RobotArmMotionPlanner()
 RobotArmMotionPlanner::RobotArmMotionPlanner(std::map<std::string, double> params)
 {
     // Load in user specified parameters. Any that isn't specified is given a default value.
-    double total_time = 5.0; int n_states = 25; double coeff_Qc = 1.0;
+    double total_time = 5.0; int n_states = 5; double coeff_Qc = 1.0;
     double sig_obs = 0.02; double eps_sdf = 0.2; double radius = 0.0;
     double step_size = 0.7; double init_precision_factor = 10000.0;
     double boundary_penalties = 10000.0; double temperature = 0.01;
@@ -131,18 +131,26 @@ void RobotArmMotionPlanner::initialize_GH_weights()
 
 std::pair<VectorXd, SpMat> RobotArmMotionPlanner::findBestPath(VectorXd start_pos, VectorXd goal_pos, gpmp2::SignedDistanceField sdf)
 {
-    VectorXd m0{_params.nx()}, mT{_params.nx()};
-
-    m0.block(0, 0, 6, 1) = start_pos;
+    std::cout << "entered findBestPath" << std::endl;
+    VectorXd m0(_params.nx()), mT(_params.nx());
+    VectorXd m0_pos(6); VectorXd mT_pos(6);
+    m0_pos = start_pos; mT_pos = goal_pos;
+    std::cout << m0_pos << std::endl;
+    std::cout << std::endl;
+    m0.block(0, 0, 6, 1) = m0_pos;
     m0.block(6, 0, 6, 1) = VectorXd::Zero(6);
 
-    mT.block(0, 0, 6, 1) = goal_pos;
+    mT.block(0, 0, 6, 1) = mT_pos;
     mT.block(6, 0, 6, 1) = VectorXd::Zero(6);
 
     _params.set_m0(m0);
     _params.set_mT(mT);
 
+    std::cout << "Set start and goal poses" << std::endl;
+
     _robot_sdf.update_sdf(sdf);
+
+    std::cout << "Optimizing" << std::endl;
 
     optimize();
 
@@ -268,7 +276,11 @@ void RobotArmMotionPlanner::optimize()
     // optimizer.set_GH_degree(_params.GH_degree());
     optimizer.set_step_size_base(_params.step_size()); // a local optima
 
+    std::cout << "Entering GVIMP code now..." << std::endl;
+
     optimizer.optimize(true);
+
+    std::cout << "Done optimizing" << std::endl;
 
     _mean = optimizer.mean();
     _precision = optimizer.precision();

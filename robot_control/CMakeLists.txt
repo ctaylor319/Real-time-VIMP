@@ -14,7 +14,7 @@ find_package(gazebo_ros_pkgs REQUIRED)
 find_package(ros2_control REQUIRED)
 find_package(ros2_controllers REQUIRED)
 find_package(trajectory_msgs REQUIRED)
-find_package(mycobot_gazebo REQUIRED)
+find_package(gazebo_simulation REQUIRED)
 find_package(xacro REQUIRED)
 find_package(moveit REQUIRED)
 find_package(moveit_core REQUIRED)
@@ -33,7 +33,7 @@ set(dependencies
   ros2_controllers
   gazebo_ros2_control
   gazebo_ros_pkgs
-  mycobot_gazebo
+  gazebo_simulation
   moveit
   moveit_core
   Poco

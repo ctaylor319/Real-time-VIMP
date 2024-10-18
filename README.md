@@ -27,6 +27,10 @@ Capstone project for Georgia Tech's MS-ROBO program. Implements hzyu17's motion-
 
 
 ## Launching
-  - TBD
   - Depth sensor must publish pointcloud2 messages to the `/cloud_in` topic.
-  - `ros2 launch octomap_server2 octomap_server_launch.py` processes lidar input
+  - Current launch sequence:
+    - `ros2 launch gazebo_simulation robot_with_control_added_simulation.launch.py`
+      - This will start up gazebo with pure gravity compensation being added to hold the robot stationary, along with environment reconstruction
+    - `ros2 run motion_planning GVIMPImpl`
+      - This will run the motion planner with environmental input
+    - Current output is the planned path, with control integration in development

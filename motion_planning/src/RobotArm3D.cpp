@@ -23,6 +23,7 @@ RobotArm3D::RobotArm3D ( double eps, double radius ) :
  _eps(eps),
  _radius(radius)
 {
+    generateArm();
 }
 
 RobotArm3D::RobotArm3D ( double eps, double radius, const gpmp2::SignedDistanceField& sdf ) :
@@ -49,15 +50,14 @@ void RobotArm3D::generateArm(){
     gtsam::Vector6 alpha = ( gtsam::Vector6() << -M_PI/2.0, 0.0, 0.0, M_PI/2.0, M_PI/2.0, 0.0 ).finished();
     gtsam::Vector6 d = ( gtsam::Vector6() << 0.13156, 0.0, 0.0, 0.06639, 0.07318, 0.0 ).finished();
     gtsam::Vector6 theta_bias = ( gtsam::Vector6() << M_PI/2.0, -M_PI/2.0, 0.0, -M_PI/2.0, M_PI/2.0, 0.0 ).finished();
-    gtsam::Pose3 base_pose = gtsam::Pose3(gtsam::Rot3(), gtsam::Point3());
+    gtsam::Pose3 base_pose = gtsam::Pose3(gtsam::Rot3(), gtsam::Point3(0.0, 0.0, 0.0));
     
     Arm arm( 6, a, alpha, d, base_pose, theta_bias );
-
+    
     // body spheres    
     BodySphereVector body_spheres;
 
     body_spheres.push_back(BodySphere(0, 0.06, gtsam::Point3(0.0,  -0.075,  0.0)));
-
     body_spheres.push_back(BodySphere(0, 0.06, gtsam::Point3(0.0,  0.0,  0.0)));
 
     body_spheres.push_back(BodySphere(1, 0.05, gtsam::Point3(0.1104,  0.0,  0.06639)));
@@ -73,6 +73,7 @@ void RobotArm3D::generateArm(){
     body_spheres.push_back(BodySphere(5, 0.02, gtsam::Point3(0.0, 0.0,  0.025)));
 
     Base::_robot = gpmp2::ArmModel{arm, body_spheres};
+    std::cout << _robot.nr_body_spheres() << std::endl;
 }
 
 int RobotArm3D::ndof() const

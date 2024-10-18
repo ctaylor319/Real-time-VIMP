@@ -14,6 +14,7 @@ list(APPEND CMAKE_PREFIX_PATH "${BOOST_ROOT}")
 # Dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(control_msgs REQUIRED)
 find_package(PCL REQUIRED)
 find_package(octomap REQUIRED)
 find_package(Eigen3 3.4.0 REQUIRED)
@@ -45,6 +46,7 @@ add_compile_definitions("INSTALL_DIR=${CMAKE_INSTALL_PREFIX}")
 set(dependencies
   rclcpp
   std_msgs
+  control_msgs
   PCL
   Eigen3
   octomap

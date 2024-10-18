@@ -24,6 +24,7 @@ private:
     
     rclcpp::Subscription<grid_map_msgs::msg::GridMap>::SharedPtr _gridmap_subscriber;
     rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr _path_status_subscriber;
+    rclcpp::Subscription<control_msgs::msg::JointTrajectoryControllerState>::SharedPtr _robot_state_subscriber;
     rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr _path_publisher;
 
     /**
@@ -34,6 +35,7 @@ private:
      */
     void gridMapCallback(grid_map_msgs::msg::GridMap msg);
     void pathStatusCallback(std_msgs::msg::Bool msg);
+    void StateCallback(control_msgs::msg::JointTrajectoryControllerState msg);
     gpmp2::SignedDistanceField generateSDF(grid_map_msgs::msg::GridMap msg);
     std::vector<float> convertToRosFloat(VectorXd res);
 

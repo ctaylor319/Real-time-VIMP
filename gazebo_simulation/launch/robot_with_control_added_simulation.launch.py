@@ -25,7 +25,8 @@ def generate_launch_description():
   world_file_path = 'worlds/empty_classic.world' # Example: 'worlds/house_classic.world', 'worlds/empty_classic.world', 'worlds/small_warehouse_classic.world'
 
   # Set the path to different files and folders.  
-  pkg_gazebo_ros = FindPackageShare(package='gazebo_ros').find('gazebo_ros')  
+  pkg_gazebo_ros = FindPackageShare(package='gazebo_ros').find('gazebo_ros')
+  pkg_octomap_server = FindPackageShare(package='octomap_server2').find('octomap_server2')
   pkg_share_description = FindPackageShare(package=package_name_description).find(package_name_description)
   pkg_share_gazebo = FindPackageShare(package=package_name_gazebo).find(package_name_gazebo)
 
@@ -171,6 +172,12 @@ def generate_launch_description():
       os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')),
     condition=IfCondition(PythonExpression([use_simulator, ' and not ', headless])))
 
+  # Start octomap server    
+  start_octomap_server_cmd = IncludeLaunchDescription(
+    PythonLaunchDescriptionSource(
+      os.path.join(pkg_octomap_server, 'launch', 'octomap_server_launch.py')),
+    condition=IfCondition(PythonExpression([use_simulator, ' and not ', headless])))
+
   # Launch joint state broadcaster
   start_joint_state_broadcaster_cmd = Node(
     package="controller_manager",
@@ -217,7 +224,13 @@ def generate_launch_description():
       '-P', pitch,
       '-Y', yaw
       ],
-    output='screen')  
+    output='screen') 
+
+  # Launch arm controller
+  start_env_construction_cmd = Node(
+    package="env_construction",
+    executable="octomap_to_gridmap"
+  )  
     
   # Create the launch description and populate
   ld = LaunchDescription()
@@ -248,6 +261,8 @@ def generate_launch_description():
   ld.add_action(start_gripper_controller_cmd) 
   ld.add_action(start_joint_state_broadcaster_cmd)
   ld.add_action(start_robot_state_publisher_cmd)
+  ld.add_action(start_octomap_server_cmd)
+  ld.add_action(start_env_construction_cmd)
   ld.add_action(start_rviz_cmd)  
   ld.add_action(start_gazebo_ros_spawner_cmd)
 

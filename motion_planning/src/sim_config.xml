@@ -1,5 +1,5 @@
 <config>
-	<goal>0.0 0.0 0.0 0.0 0.0 0.0</goal>
+	<goal>-1.345 -1.23 0.264 -0.296 0.389 -1.5</goal>
 	<urdf>mycobot_280_classic_gazebo.urdf</urdf>
 	<srdf>mycobot_280.srdf</srdf>
 </config>
