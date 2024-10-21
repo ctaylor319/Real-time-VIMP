@@ -11,9 +11,13 @@
 #include <memory>
 #include <string>
 
-#include <octomap/octomap.h>
-#include <grid_map_core/GridMap.hpp>
 #include <octomap_msgs/conversions.h>
+#include <octomap_msgs/msg/octomap.hpp>
+#include <grid_map_msgs/msg/grid_map.hpp>
+
+#include <octomap/octomap.h>
+
+#include <grid_map_core/GridMap.hpp>
 #include <grid_map_octomap/GridMapOctomapConverter.hpp>
 #include <grid_map_ros/grid_map_ros.hpp>
 
@@ -24,7 +28,7 @@ using namespace std::chrono_literals;
 MapConversion::MapConversion() : Node( "octomap_to_gridmap" )
 {
     _octomap_subscriber = create_subscription< octomap_msgs::msg::Octomap >( "/octomap_binary", 10,
-        std::bind( &MapConversion::octomapCallback, this, std::placeholders::_1 ) );
+        std::bind(&MapConversion::octomapCallback, this, std::placeholders::_1) );
     _gridmap_publisher = create_publisher<grid_map_msgs::msg::GridMap>( "/gridmap_binary", 10 );
 }
 
@@ -46,15 +50,17 @@ void MapConversion::octomapCallback ( octomap_msgs::msg::Octomap msg ) const
         return;
     }
 
+    // Copy over the bounds of the octomap
     grid_map::Position3 min_bound;
     grid_map::Position3 max_bound;
     octomap->getMetricMin( min_bound(0), min_bound(1), min_bound(2) );
     octomap->getMetricMax( max_bound(0), max_bound(1), max_bound(2) );
 
+    // Convert to grid map, publish if it was successful
     bool res = grid_map::GridMapOctomapConverter::fromOctomap( *octomap, "elevation", gridMap, &min_bound, &max_bound );
     if ( res ) {
         auto out_msg = grid_map::GridMapRosConverter::toMessage( gridMap );
-        _gridmap_publisher->publish( std::move( out_msg ) );
+        _gridmap_publisher->publish( std::move(out_msg) );
     }
     else {
         std::cout << "Failed to convert octomap to grid_map" << std::endl;
@@ -63,16 +69,12 @@ void MapConversion::octomapCallback ( octomap_msgs::msg::Octomap msg ) const
 
 int main(int argc, char * argv[])
 {
-    // Initialize the ROS 2 client library
     rclcpp::init(argc, argv);
 
-    // Create an instance of the EnvDataCollect node
     auto node = std::make_shared<MapConversion>();
 
-    // Spin the node to execute the callbacks
     rclcpp::spin(node);
 
-    // Shutdown the ROS 2 client library
     rclcpp::shutdown();
 
     return 0;

@@ -14,6 +14,7 @@ list(APPEND CMAKE_PREFIX_PATH "${BOOST_ROOT}")
 # Dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(motion_planning_msgs REQUIRED)
 find_package(control_msgs REQUIRED)
 find_package(PCL REQUIRED)
 find_package(octomap REQUIRED)
@@ -45,6 +46,7 @@ add_compile_definitions("INSTALL_DIR=${CMAKE_INSTALL_PREFIX}")
 # Add dependencies to variable
 set(dependencies
   rclcpp
+  motion_planning_msgs
   std_msgs
   control_msgs
   PCL
@@ -93,7 +95,8 @@ target_link_libraries(GVIMPImpl ROBOT_ARM_LIBRARY GVI_ROBOT_LIBRARY ${GTSAM_LIBR
                         OpenMP::OpenMP_CXX ${EIGEN3_LIBRARIES} ${BOOST_LIBRARIES} Boost::serialization 
                         ${libSpGH_LIBRARY} ${Matlab_MEX_LIBRARY})
 
-
+file(GLOB_RECURSE SIM_CONFIG "src/sim_config.xml")
+install(FILES ${SIM_CONFIG} DESTINATION "../robot_control/lib")
 
 # Install cpp executables
 

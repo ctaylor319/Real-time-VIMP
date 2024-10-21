@@ -11,6 +11,9 @@
 #include <memory>
 #include <string>
 
+#include <trajectory_msgs/msg/joint_trajectory.hpp>
+#include <control_msgs/msg/joint_trajectory_controller_state.hpp>
+
 #include <moveit/trajectory_processing/time_optimal_trajectory_generation.h>
 #include <urdf_parser/urdf_parser.h>
 
@@ -44,16 +47,12 @@ void RobotControlInterface::StateCallback ( control_msgs::msg::JointTrajectoryCo
 int main(int argc, char * argv[])
 {
 
-    // Initialize the ROS 2 client library
     rclcpp::init(argc, argv);
 
-    // Create an instance of the EnvDataCollect node
     auto node = std::make_shared<RobotControlInterface>();
 
-    // Spin the node to execute the callbacks
     rclcpp::spin(node);
 
-    // Shutdown the ROS 2 client library
     rclcpp::shutdown();
 
     return 0;

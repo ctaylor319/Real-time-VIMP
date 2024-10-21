@@ -34,27 +34,29 @@ RobotArm3D::RobotArm3D ( double eps, double radius, const gpmp2::SignedDistanceF
     Base::_sdf = sdf;
     Base::_psdf = std::make_shared<gpmp2::SignedDistanceField>( Base::_sdf );
     generateArm();
-    Base::_psdf_factor = std::make_shared<gpmp2::ObstacleSDFFactorArm>( gpmp2::ObstacleSDFFactorArm(gtsam::symbol('x', 0), Base::_robot, Base::_sdf, 0.0, _eps) );
+    Base::_psdf_factor = std::make_shared<gpmp2::ObstacleSDFFactorArm>( gpmp2::ObstacleSDFFactorArm(gtsam::symbol('x', 0),
+                                                                         Base::_robot, Base::_sdf, 0.0, _eps) );
 }
 
 inline void RobotArm3D::update_sdf ( const gpmp2::SignedDistanceField& sdf )
 {
     Base::_sdf = sdf;
     Base::_psdf = std::make_shared<gpmp2::SignedDistanceField>(sdf);
-    Base::_psdf_factor = std::make_shared<gpmp2::ObstacleSDFFactorArm>( gpmp2::ObstacleSDFFactorArm( gtsam::symbol('x', 0), Base::_robot, sdf, 0.0, _eps) );
+    Base::_psdf_factor = std::make_shared<gpmp2::ObstacleSDFFactorArm>( gpmp2::ObstacleSDFFactorArm( gtsam::symbol('x', 0), 
+                                                                         Base::_robot, sdf, 0.0, _eps) );
 }
 
-void RobotArm3D::generateArm(){
-
+void RobotArm3D::generateArm()
+{
+    // Build arm kinematic model from DH parameters
     gtsam::Vector6 a = ( gtsam::Vector6() << 0.0, -0.1104, -0.096, 0.0, 0.0, 0.0436 ).finished();
     gtsam::Vector6 alpha = ( gtsam::Vector6() << -M_PI/2.0, 0.0, 0.0, M_PI/2.0, M_PI/2.0, 0.0 ).finished();
     gtsam::Vector6 d = ( gtsam::Vector6() << 0.13156, 0.0, 0.0, 0.06639, 0.07318, 0.0 ).finished();
     gtsam::Vector6 theta_bias = ( gtsam::Vector6() << M_PI/2.0, -M_PI/2.0, 0.0, -M_PI/2.0, M_PI/2.0, 0.0 ).finished();
     gtsam::Pose3 base_pose = gtsam::Pose3(gtsam::Rot3(), gtsam::Point3(0.0, 0.0, 0.0));
-    
     Arm arm( 6, a, alpha, d, base_pose, theta_bias );
     
-    // body spheres    
+    // Create body spheres based on physical robot model
     BodySphereVector body_spheres;
 
     body_spheres.push_back(BodySphere(0, 0.06, gtsam::Point3(0.0,  -0.075,  0.0)));
@@ -72,16 +74,9 @@ void RobotArm3D::generateArm(){
 
     body_spheres.push_back(BodySphere(5, 0.02, gtsam::Point3(0.0, 0.0,  0.025)));
 
+    // Set complete robot model
     Base::_robot = gpmp2::ArmModel{arm, body_spheres};
-    std::cout << _robot.nr_body_spheres() << std::endl;
 }
 
-int RobotArm3D::ndof() const
-{
-    return _ndof;
-}
-
-int RobotArm3D::nlinks() const
-{
-    return _nlinks;
-}
+int RobotArm3D::ndof() const { return _ndof; }
+int RobotArm3D::nlinks() const { return _nlinks; }

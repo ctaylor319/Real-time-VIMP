@@ -11,6 +11,9 @@
 #include <memory>
 #include <string>
 
+#include <trajectory_msgs/msg/joint_trajectory.hpp>
+#include <motion_planning_msgs/msg/waypoint_path.hpp>
+
 #include <moveit/trajectory_processing/time_optimal_trajectory_generation.h>
 #include <urdf_parser/urdf_parser.h>
 
@@ -20,15 +23,19 @@
 #include "add_time_parameterization.h"
 
 #define STRING(x) #x
+#define XSTRING(x) STRING(x)
 
 using namespace std::chrono_literals;
 
 AddTimeParameterization::AddTimeParameterization() : Node( "add_time_parameterization" )
 {
+    _path_subscriber = create_subscription<motion_planning_msgs::msg::WaypointPath>( "/vimp_path", 10,
+        std::bind( &AddTimeParameterization::VIMPCallback, this, std::placeholders::_1 ) );
+    _pose_publisher = create_publisher<trajectory_msgs::msg::JointTrajectory>( "/raw_joint_trajectory", 10 );
 
     // Read in config parameters
     Poco::Util::AbstractConfiguration *cfg;
-    std::string install_dir = STRING(INSTALL_DIR);
+    std::string install_dir = XSTRING(INSTALL_DIR);
     try {
         cfg = new Poco::Util::XMLConfiguration( install_dir+"/lib/sim_config.xml" );
     } catch ( const std::exception& e ) {
@@ -42,11 +49,6 @@ AddTimeParameterization::AddTimeParameterization() : Node( "add_time_parameteriz
         std::cout << "Unable to parse robot files: " << e.what() << std::endl;
     }
 
-    _pose_publisher = create_publisher<trajectory_msgs::msg::JointTrajectory>( "/raw_joint_trajectory", 10 );
-
-    // Create a timer to periodically call the timerCallback function
-    _timer = create_wall_timer( 5s, std::bind(&AddTimeParameterization::VIMPCallback, this) );
-
     // Scraped from moveit source code, really only need max vel/accel from model files for time
     // parameterization but you still need this setup
     urdf::ModelInterfaceSharedPtr urdf = urdf::parseURDFFile( urdf_path );
@@ -54,19 +56,13 @@ AddTimeParameterization::AddTimeParameterization() : Node( "add_time_parameteriz
     srdf->initFile( *urdf, srdf_path );
     _model = std::make_shared<moveit::core::RobotModel>( urdf, srdf );
     _group = _model->getJointModelGroup( "robot_arm" );
-    
-    // testing waypoint positions
-    _arm_positions = {
-        {0.0, 0.0, 0.0, 0.0, 0.0, 0.0},  // Home location
-        {-1.345, -1.23, 0.264, -0.296, 0.389, -1.5}  // Goal location
-    };
 }
 
 AddTimeParameterization::~AddTimeParameterization()
 {
 }
 
-void AddTimeParameterization::VIMPCallback()
+void AddTimeParameterization::VIMPCallback( motion_planning_msgs::msg::WaypointPath msg )
 {
     // Create new JointTrajectory messages for arm and gripper
     robot_trajectory::RobotTrajectory robot_traj( _model, _group );
@@ -79,12 +75,17 @@ void AddTimeParameterization::VIMPCallback()
     robot_waypoint.setToDefaultValues();
     double dt = 0.1; // Default time step between waypoints, updated by totgComputeTimeStamps
 
-    // ADD WAYPOINTS HERE
-    for ( auto waypoint : _arm_positions ) {
+    // Add waypoints to robot trajectory
+    // Note that each waypoint has position+vel, but we only need position
+    for ( size_t i=0; i<msg.waypoints.size()/msg.waypoint_size; ++i ) {
+        std::vector<double> waypoint(msg.waypoint_size/2);
+        std::copy( msg.waypoints.begin()+i*msg.waypoint_size, 
+            msg.waypoints.begin()+i*msg.waypoint_size+msg.waypoint_size/2, waypoint.begin() );
         robot_waypoint.setJointGroupPositions( _group, waypoint );
         robot_traj.addSuffixWayPoint( robot_waypoint, dt );
     }
     
+    // Compute time stamps for robot trajectory
     double max_vel_scaling = 1.0;
     double max_accel_scaling = 1.0;
     const size_t num_waypoints = 20;
@@ -92,20 +93,20 @@ void AddTimeParameterization::VIMPCallback()
 
     // Create JointTrajectoryPoints for arm
     for ( size_t i=0; i<robot_traj.getWayPointCount(); ++i ) {
+        
+        // data only accessible as Eigen objects, so we first get joint values then convert to vector
         auto point_arm = trajectory_msgs::msg::JointTrajectoryPoint();
-
-        // data only accessible as Eigen structure, so we first get joint values then convert to vector
         Eigen::VectorXd eWaypoint;
         robot_traj.getWayPoint(i).copyJointGroupPositions( _group, eWaypoint ); // 
         point_arm.positions = std::vector<double>( eWaypoint.data(), eWaypoint.data() + eWaypoint.size() );
         std::chrono::nanoseconds waypoint_time_from_start( uint64_t(robot_traj.getWayPointDurationFromStart(i) * 1e9) );
-        std::cout << robot_traj.getWayPointDurationFromStart(i) << std::endl;
         point_arm.time_from_start = rclcpp::Duration( waypoint_time_from_start );
         msg_arm.points.push_back( point_arm );
     }
     _pose_publisher->publish( msg_arm );
 }
 
+// Source: Moveit2
 bool AddTimeParameterization::totgComputeTimeStamps ( const size_t num_waypoints, robot_trajectory::RobotTrajectory& trajectory,
                            const double max_velocity_scaling_factor, const double max_acceleration_scaling_factor )
 {
@@ -120,17 +121,12 @@ bool AddTimeParameterization::totgComputeTimeStamps ( const size_t num_waypoints
 
 int main(int argc, char * argv[])
 {
-
-    // Initialize the ROS 2 client library
     rclcpp::init(argc, argv);
 
-    // Create an instance of the EnvDataCollect node
     auto node = std::make_shared<AddTimeParameterization>();
 
-    // Spin the node to execute the callbacks
     rclcpp::spin(node);
 
-    // Shutdown the ROS 2 client library
     rclcpp::shutdown();
 
     return 0;

@@ -14,6 +14,7 @@ find_package(gazebo_ros_pkgs REQUIRED)
 find_package(ros2_control REQUIRED)
 find_package(ros2_controllers REQUIRED)
 find_package(trajectory_msgs REQUIRED)
+find_package(motion_planning_msgs REQUIRED)
 find_package(gazebo_simulation REQUIRED)
 find_package(xacro REQUIRED)
 find_package(moveit REQUIRED)
@@ -29,6 +30,7 @@ set(dependencies
   rclcpp
   std_msgs
   trajectory_msgs
+  motion_planning_msgs
   ros2_control
   ros2_controllers
   gazebo_ros2_control

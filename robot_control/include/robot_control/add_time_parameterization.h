@@ -9,7 +9,6 @@
  */
 
 #include <rclcpp/rclcpp.hpp>
-#include <trajectory_msgs/msg/joint_trajectory.hpp>
 
 // arm group names
 const std::vector<std::string> arm_joints = {
@@ -34,33 +33,34 @@ private:
      * @brief callback function for when we receive a motion planning message. Adds
      * time stamps to each waypoint and publishes a complete robot trajectory. Motion
      * planning messages are sent whenever we come within a set tolerance of a waypoint.
+     *
      * @param msg [in]: vector message containing waypoints from start to goal.
      */
-    void VIMPCallback();
+    void VIMPCallback(motion_planning_msgs::msg::WaypointPath msg);
 
     /**
      * @brief This function comes from the latest moveit release (not available on humble), but
      * we use it to adjust time stamps.
+     *
      * @param num_waypoints [in]: desired number of waypoints in the path
+     *
      * @param trajectory [in, out]: path that needs time parameterization
+     *
      * @param max_velocity_scaling_factor [in]: factor between [0, 1] that can slow down trajectory
+     *
      * @param max_acceleration_scaling_factor [in]: factor between [0, 1] that can slow down trajectory
+     *
      * @param velocity_limits [in]: sets the velocity limit for each
      */
     bool totgComputeTimeStamps(const size_t num_waypoints, robot_trajectory::RobotTrajectory& trajectory,
                            const double max_velocity_scaling_factor, const double max_acceleration_scaling_factor);
 
-    // Publishers for arm and gripper joint trajectories
+    // Publishers and Subscribers
     rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr _pose_publisher;
+    rclcpp::Subscription<motion_planning_msgs::msg::WaypointPath>::SharedPtr _path_subscriber;
 
-    // Timer for periodic callback
+    // Timer for path monitoring
     rclcpp::TimerBase::SharedPtr _timer;
-
-    // Desired goal poses for the robotic arm and gripper
-    std::vector<std::vector<double>> _arm_positions;
-
-    std::string _default_urdf_path;
-    std::string _default_srdf_path;
 
     moveit::core::RobotModelConstPtr _model;
     const moveit::core::JointModelGroup* _group;
