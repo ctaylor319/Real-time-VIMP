@@ -55,7 +55,6 @@ void MapConversion::octomapCallback ( octomap_msgs::msg::Octomap msg ) const
     grid_map::Position3 max_bound;
     octomap->getMetricMin( min_bound(0), min_bound(1), min_bound(2) );
     octomap->getMetricMax( max_bound(0), max_bound(1), max_bound(2) );
-
     // Convert to grid map, publish if it was successful
     bool res = grid_map::GridMapOctomapConverter::fromOctomap( *octomap, "elevation", gridMap, &min_bound, &max_bound );
     if ( res ) {

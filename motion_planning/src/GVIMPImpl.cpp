@@ -127,10 +127,10 @@ gpmp2::SignedDistanceField GVIMPImpl::generateSDF ( grid_map_msgs::msg::GridMap 
     // Get SDF parameters
     double cell_size = gridMap.getResolution();
     grid_map::Size grid_size = gridMap.getSize();
-    grid_map::Position gridOrigin;
-    gridMap.getPosition( Vector2i(0, 0), gridOrigin );
     grid_map::Length len = gridMap.getLength();
-    gtsam::Point3 origin( gridOrigin.x()-len.x(), gridOrigin.y()-len.y(), minVal );
+    grid_map::Position pos = gridMap.getPosition();
+
+    gtsam::Point3 origin( pos.x() - len.x()/2.0, pos.y() - len.y()/2.0, minVal );
 
     // Set up data parsing to a gpmp2 SDF
     int row = 0; int col = 0; int z = 0;
@@ -161,19 +161,26 @@ gpmp2::SignedDistanceField GVIMPImpl::generateSDF ( grid_map_msgs::msg::GridMap 
     gpmp2::SignedDistanceField gpmp2_sdf( origin, cell_size, gpmp2_data );
 
     // For testing purposes
-    // for ( int z=0; z<7; ++z ) {
-    //     for ( int y=0; y<12; ++y ) {
-    //         for ( int x=0; x<12; ++x ) {
-    //             grid_map::Position3 gmTestPoint( double(x)/10.0, double(y)/10.0, double(z)/10.0 );
-    //             gtsam::Point3 gtsamTestPoint( double(x)/10.0, double(y)/10.0, double(z)/10.0 );
+    for ( int z=6; z<7; ++z ) {
+        for ( int y=0; y<12; ++y ) {
+            for ( int x=0; x<12; ++x ) {
+                grid_map::Position3 gmTestPoint( double(x)/10.0, double(y)/10.0, double(z)/10.0 );
+                std::cout << gm_sdf.value(gmTestPoint) << " ";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+    }
 
-    //             std::cout << x << " " << y << " " << z << std::endl;
-    //             std::cout << "grid_map test: " << gm_sdf.value(gmTestPoint) << std::endl;
-    //             std::cout << "gtsam test: " << gpmp2_sdf.getSignedDistance(gtsamTestPoint) << std::endl;
-    //             std::cout << std::endl;
-    //         }
-    //     }
-    // }
+    for ( int z=6; z<7; ++z ) {
+        for ( int y=0; y<12; ++y ) {
+            for ( int x=0; x<12; ++x ) {
+                gtsam::Point3 gtsamTestPoint( double(x)/10.0, double(y)/10.0, double(z)/10.0 );
+                std::cout << gpmp2_sdf.getSignedDistance(gtsamTestPoint) << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
 
     return gpmp2_sdf;
 }

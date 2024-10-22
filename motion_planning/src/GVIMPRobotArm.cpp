@@ -15,12 +15,12 @@ using namespace vimp;
 
 RobotArmMotionPlanner::RobotArmMotionPlanner()
 {
-    double total_time = 5.0; int n_states = 5; double coeff_Qc = 1.0;
+    double total_time = 5.0; int n_states = 10; double coeff_Qc = 1.0;
     double sig_obs = 0.02; double eps_sdf = 0.2; double radius = 0.0;
     double step_size = 0.7; double init_precision_factor = 10000.0;
     double boundary_penalties = 10000.0; double temperature = 0.01;
     double high_temperature = 0.2; int low_temp_iterations = 3;
-    double stop_err = 1.0; int num_iter = 6; int max_n_backtracking = 3;
+    double stop_err = 1.0; int num_iter = 6; int max_n_backtracking = 5;
     int GH_deg = 3; int nx = 12; int nu = 6;
     _params = GVIMPParams( nx, nu, total_time, n_states, coeff_Qc, GH_deg, sig_obs, 
                             eps_sdf, radius, step_size, num_iter, init_precision_factor, 
