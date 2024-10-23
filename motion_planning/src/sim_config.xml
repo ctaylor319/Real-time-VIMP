@@ -2,4 +2,22 @@
 	<goal>-1.345 -1.23 0.264 -0.296 0.389 -1.5</goal>
 	<urdf>mycobot_280_classic_gazebo.urdf</urdf>
 	<srdf>mycobot_280.srdf</srdf>
+	<total_time>5.0</total_time>
+	<n_states>10</n_states>
+	<coeff_Qc>1.0</coeff_Qc>
+	<sig_obs>0.02</sig_obs>
+	<eps_sdf>0.2</eps_sdf>
+	<radius>0.0</radius>
+	<step_size>0.7</step_size>
+	<init_precision_factor>10000.0</init_precision_factor>
+	<boundary_penalties>10000.0</boundary_penalties>
+	<temperature>0.01</temperature>
+	<high_temperature>0.2</high_temperature>
+	<low_temp_iterations>3</low_temp_iterations>
+	<stop_err>1.0</stop_err>
+	<num_iter>6</num_iter>
+	<max_n_backtracking>5</max_n_backtracking>
+	<GH_deg>3</GH_deg>
+	<nx>12</nx>
+	<nu>6</nu>
 </config>

@@ -1,0 +1,21 @@
+float64 total_time
+int8 n_states
+float64 coeff_qc
+float64 sig_obs
+float64 eps_sdf
+float64 radius
+float64 step_size
+float64 init_precision_factor
+float64 boundary_penalties
+float64 temperature
+float64 high_temperature
+int8 low_temp_iterations
+float64 stop_err
+int8 num_iter
+int8 max_n_backtracking
+int8 gh_deg
+int8 nx
+int8 nu
+---
+bool success
+string message

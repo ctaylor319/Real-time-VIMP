@@ -15,6 +15,12 @@
 
 class GVIMPImpl : public rclcpp::Node
 {
+enum RobotState {
+    Idle,
+    CreatePath,
+    ExecutePath,
+    ResetArm
+};
 public:
 
     // Constructors & Destructors
@@ -28,6 +34,8 @@ private:
     rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr _path_status_subscriber;
     rclcpp::Subscription<control_msgs::msg::JointTrajectoryControllerState>::SharedPtr _robot_state_subscriber;
     rclcpp::Publisher<motion_planning_msgs::msg::WaypointPath>::SharedPtr _path_publisher;
+    rclcpp::Service<motion_planning_msgs::srv::RuntimeParameterInterface>::SharedPtr _parameter_service;
+    rclcpp::Service<motion_planning_msgs::srv::RuntimePathInterface>::SharedPtr _path_service;
 
     /**
      * @brief: callback function for when we receive a grid_map message. Creates path
@@ -51,7 +59,20 @@ private:
      *
      * @param msg [in]: message containing joint positions & errors.
      */
-    void StateCallback(control_msgs::msg::JointTrajectoryControllerState msg);
+    void stateCallback(control_msgs::msg::JointTrajectoryControllerState msg);
+
+    /**
+     * @brief: callback function for robot parameter change requests.
+     *
+     * @param request [in]: service request message
+     *
+     * @param response [out]: service response message
+     */
+    void handleParameterRequest ( const std::shared_ptr<motion_planning_msgs::srv::RuntimeParameterInterface::Request> request,
+                                    std::shared_ptr<motion_planning_msgs::srv::RuntimeParameterInterface::Response> response );
+
+    void handlePathRequest ( const std::shared_ptr<motion_planning_msgs::srv::RuntimePathInterface::Request> request,
+                                std::shared_ptr<motion_planning_msgs::srv::RuntimePathInterface::Response> response );
 
     /**
      * @brief: creates a signed distance field and populates the data into the same
@@ -63,7 +84,14 @@ private:
      */
     gpmp2::SignedDistanceField generateSDF(grid_map_msgs::msg::GridMap msg);
 
-    bool _new_path_needed; // Stores the result of path status
+    /**
+     * @brief: Updates the current state of our robot FSM
+     */
+    void updateState();
+
+    enum RobotState _state;
     std::unique_ptr<vimp::RobotArmMotionPlanner> _path_planner;
     VectorXd _start_pos, _goal_pos;
+    bool _new_path_needed, _reset_called;
+    motion_planning_msgs::msg::WaypointPath _curr_path;
 };

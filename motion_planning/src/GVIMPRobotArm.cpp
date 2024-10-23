@@ -8,6 +8,11 @@
 
 #include <helpers/ExperimentRunner.h>
 
+#include <Poco/Util/AbstractConfiguration.h>
+#include <Poco/Util/XMLConfiguration.h>
+#include <Poco/StringTokenizer.h>
+#include <Poco/NumberParser.h>
+
 #include "GVIMPRobotArm.h"
 #include "GaussianVI/ngd/NGD-GH.h"
 
@@ -15,6 +20,7 @@ using namespace vimp;
 
 RobotArmMotionPlanner::RobotArmMotionPlanner()
 {
+    // default values
     double total_time = 5.0; int n_states = 10; double coeff_Qc = 1.0;
     double sig_obs = 0.02; double eps_sdf = 0.2; double radius = 0.0;
     double step_size = 0.7; double init_precision_factor = 10000.0;
@@ -22,78 +28,38 @@ RobotArmMotionPlanner::RobotArmMotionPlanner()
     double high_temperature = 0.2; int low_temp_iterations = 3;
     double stop_err = 1.0; int num_iter = 6; int max_n_backtracking = 5;
     int GH_deg = 3; int nx = 12; int nu = 6;
-    _params = GVIMPParams( nx, nu, total_time, n_states, coeff_Qc, GH_deg, sig_obs, 
-                            eps_sdf, radius, step_size, num_iter, init_precision_factor, 
-                            boundary_penalties, temperature, high_temperature, low_temp_iterations, 
-                            stop_err, max_n_backtracking, "map_bookshelf", "" );
-    _robot_sdf = RobotArm3D( _params.eps_sdf(), _params.radius() );
-    initialize_GH_weights();
-}
 
-RobotArmMotionPlanner::RobotArmMotionPlanner ( std::map<std::string, double> params )
-{
-    // Load in user specified parameters. Any that isn't specified is given a default value.
-    double total_time = 5.0; int n_states = 5; double coeff_Qc = 1.0;
-    double sig_obs = 0.02; double eps_sdf = 0.2; double radius = 0.0;
-    double step_size = 0.7; double init_precision_factor = 10000.0;
-    double boundary_penalties = 10000.0; double temperature = 0.01;
-    double high_temperature = 0.2; int low_temp_iterations = 25;
-    double stop_err = 1e-5; int num_iter = 50; int max_n_backtracking = 5;
-    int GH_deg = 3; int nx = 12; int nu = 6;
+    // Initialize config file reader
+    Poco::Util::AbstractConfiguration *cfg;
+    std::string install_dir = XSTRING( INSTALL_DIR );
+    try {
+        cfg = new Poco::Util::XMLConfiguration( install_dir+"/lib/sim_config.xml" );
+    } catch ( const std::exception& e ) {
+        std::cout << "Unable to open configuration file: " << e.what() << std::endl;
+    }
 
-    if ( params.count("total_time") ) {
-        total_time = params["total_time"];
-    }
-    if ( params.count("n_states") ) {
-        n_states = static_cast<int>( params["n_states"] );
-    }
-    if ( params.count("coeff_Qc") ) {
-        coeff_Qc = params["coeff_Qc"];
-    }
-    if ( params.count("sig_obs") ) {
-        sig_obs = params["sig_obs"];
-    }
-    if ( params.count("eps_sdf") ) {
-        eps_sdf = params["eps_sdf"];
-    }
-    if ( params.count("radius") ) {
-        radius = params["radius"];
-    }
-    if ( params.count("step_size") ) {
-        step_size = params["step_size"];
-    }
-    if ( params.count("init_precision_factor") ) {
-        init_precision_factor = params["init_precision_factor"];
-    }
-    if ( params.count("boundary_penalties") ) {
-        boundary_penalties = params["boundary_penalties"];
-    }
-    if ( params.count("temperature") ) {
-        temperature = params["temperature"];
-    }
-    if ( params.count("high_temperature") ) {
-        high_temperature = params["high_temperature"];
-    }
-    if ( params.count("low_temp_iterations") ) {
-        low_temp_iterations = static_cast<int>( params["low_temp_iterations"] );
-    }
-    if ( params.count("stop_err") ) {
-        stop_err = params["stop_err"];
-    }
-    if ( params.count("num_iter") ) {
-        num_iter = static_cast<int>( params["num_iter"] );
-    }
-    if ( params.count("max_n_backtracking") ) {
-        max_n_backtracking = static_cast<int>( params["max_n_backtracking"] );
-    }
-    if ( params.count("GH_deg") ) {
-        GH_deg = static_cast<int>( params["GH_deg"] );
-    }
-    if ( params.count("nx") ) {
-        nx = static_cast<int>( params["nx"] );
-    }
-    if ( params.count("nu") ) {
-        nu = static_cast<int>( params["nu"] );
+    // Read in params
+    try {
+        total_time = cfg->getDouble("total_time");
+        n_states = cfg->getInt("n_states");
+        coeff_Qc = cfg->getDouble("coeff_Qc");
+        sig_obs = cfg->getDouble("sig_obs");
+        eps_sdf = cfg->getDouble("eps_sdf");
+        radius = cfg->getDouble("radius");
+        step_size = cfg->getDouble("step_size");
+        init_precision_factor = cfg->getDouble("init_precision_factor");
+        boundary_penalties = cfg->getDouble("boundary_penalties");
+        temperature = cfg->getDouble("temperature");
+        high_temperature = cfg->getDouble("high_temperature");
+        low_temp_iterations = cfg->getInt("low_temp_iterations");
+        stop_err = cfg->getDouble("stop_err");
+        num_iter = cfg->getInt("num_iter");
+        max_n_backtracking = cfg->getInt("max_n_backtracking");
+        GH_deg = cfg->getInt("GH_deg");
+        nx = cfg->getInt("nx");
+        nu = cfg->getInt("nu");
+    } catch ( const std::exception& e ) {
+        std::cout << "Unable to parse goal some/all parameters: " << e.what() << std::endl;
     }
 
     _params = GVIMPParams( nx, nu, total_time, n_states, coeff_Qc, GH_deg, sig_obs, 

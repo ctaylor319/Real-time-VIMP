@@ -24,7 +24,6 @@ public:
 
     // Constructors & Destructors
     RobotArmMotionPlanner();
-    RobotArmMotionPlanner(std::map<std::string, double> params);
     ~RobotArmMotionPlanner();
 
     /**

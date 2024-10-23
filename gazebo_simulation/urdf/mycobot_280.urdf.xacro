@@ -559,14 +559,14 @@
 						<max_angle>1.57</max_angle>
 					</horizontal>
 					<vertical>
-						<samples>10</samples>
-						<min_angle>-0.15</min_angle>
-						<max_angle>0.15</max_angle>
+						<samples>25</samples>
+						<min_angle>-0.5</min_angle>
+						<max_angle>0.5</max_angle>
 					</vertical>
 				</scan>
 				<range>
-					<min>0.3</min>
-					<max>5</max>
+					<min>0.1</min>
+					<max>2</max>
 				</range>
 			</ray>
 			<plugin name="ray_plugin" filename="libgazebo_ros_ray_sensor.so">

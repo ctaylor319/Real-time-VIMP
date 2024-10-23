@@ -9,7 +9,10 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME} "msg/WaypointPath.msg")
+rosidl_generate_interfaces(${PROJECT_NAME} 
+	"msg/WaypointPath.msg"
+	"srv/RuntimeParameterInterface.srv"
+	"srv/RuntimePathInterface.srv")
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
