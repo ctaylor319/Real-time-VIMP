@@ -45,9 +45,17 @@ public:
      */
     std::pair<VectorXd, SpMat> findBestPath(VectorXd start_pos, VectorXd goal_pos, gpmp2::SignedDistanceField sdf);
 
-    // Getter functions
+    // Getter/Setter functions
     RobotArm3D getRobotSDF();
     GVIMPParams getParams();
+    void setTotalTime(double totTime);
+    void setSigObs(double sigObs);
+    void setStepSize(double stepSize);
+    void setInitPrecisionFactor(double initPrecFac);
+    void setBoundaryPenalties(double pen);
+    void setTemperature(double temp);
+    void setHighTemperature(double highTemp);
+    void setNumIter(int numIter);
 
 private:
 

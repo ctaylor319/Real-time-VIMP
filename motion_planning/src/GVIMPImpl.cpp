@@ -10,6 +10,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <math.h>
 
 #include <grid_map_core/GridMap.hpp>
 #include <grid_map_msgs/msg/grid_map.hpp>
@@ -108,8 +109,13 @@ void GVIMPImpl::gridMapCallback ( grid_map_msgs::msg::GridMap msg )
         // Set message data
         _curr_path.waypoints.clear();
         _curr_path.waypoint_size = _path_planner->getParams().nx();
-        for(int i=0; i<res.first.size(); ++i){
-            _curr_path.waypoints.push_back(res.first[i]);
+        std::vector<double> waypoint_entropy = extractLogEntropyFromJoint( res.second );
+        for ( int i=0; i<res.first.size(); ++i ) {
+            _curr_path.waypoints.push_back( res.first[i] );
+        }
+        for ( int i=0; i<waypoint_entropy.size(); ++i ) {
+            _curr_path.waypoint_entropies.push_back( waypoint_entropy[i] );
+            // std::cout << waypoint_entropy[i] << std::endl;
         }
         _path_publisher->publish( _curr_path );
     }
@@ -119,11 +125,13 @@ void GVIMPImpl::gridMapCallback ( grid_map_msgs::msg::GridMap msg )
         _reset_called = false;
         std::vector<double> curr_path = _curr_path.waypoints;
         _curr_path.waypoints.clear();
-        for(int i=curr_path.size()-_path_planner->getParams().nx(); i>=0; i-=_path_planner->getParams().nx()){
-            for(int j=0; j<_path_planner->getParams().nx(); ++j)
-            _curr_path.waypoints.push_back(curr_path[i+j]);
+        for ( int i=curr_path.size()-_path_planner->getParams().nx(); i>=0; i-=_path_planner->getParams().nx() ) {
+            for ( int j=0; j<_path_planner->getParams().nx(); ++j ) {
+                _curr_path.waypoints.push_back( curr_path[i+j] );
+            }
         }
         _path_publisher->publish( _curr_path );
+        _curr_path.waypoints.clear();
     }
     updateState();
 }
@@ -133,7 +141,7 @@ void GVIMPImpl::handleParameterRequest ( const std::shared_ptr<motion_planning_m
 {   
     std::string success_msg = "Received: {";
     if ( request->total_time > 0.0 ) {
-        _path_planner->getParams().set_total_time( request->total_time );
+        _path_planner->setTotalTime( request->total_time );
         success_msg.append(" total_time ");
     }
     if ( request->n_states > 0 ) {
@@ -145,7 +153,7 @@ void GVIMPImpl::handleParameterRequest ( const std::shared_ptr<motion_planning_m
         // success_msg.append(" coeff_Qc ");
     }
     if ( request->sig_obs > 0.0 ) {
-        _path_planner->getParams().update_sig_obs( request->sig_obs );
+        _path_planner->setSigObs( request->sig_obs );
         success_msg.append(" sig_obs ");
     }
     if ( request->eps_sdf > 0.0 ) {
@@ -157,35 +165,35 @@ void GVIMPImpl::handleParameterRequest ( const std::shared_ptr<motion_planning_m
         // success_msg.append(" radius ");
     }
     if ( request->step_size > 0.0 ) {
-        _path_planner->getParams().update_step_size( request->step_size );
+        _path_planner->setStepSize( request->step_size );
         success_msg.append(" step_size ");
     }
     if ( request->init_precision_factor > 0.0 ) {
-        _path_planner->getParams().update_initial_precision_factor( request->init_precision_factor );
+        _path_planner->setInitPrecisionFactor( request->init_precision_factor );
         success_msg.append(" init_precision_factor ");
     }
     if ( request->boundary_penalties > 0.0 ) {
-        _path_planner->getParams().update_boundary_penalties( request->boundary_penalties );
+        _path_planner->setBoundaryPenalties( request->boundary_penalties );
         success_msg.append(" boundary_penalties ");
     }
     if ( request->temperature > 0.0 ) {
-        _path_planner->getParams().set_temperature( request->temperature );
+        _path_planner->setTemperature( request->temperature );
         success_msg.append(" temperature ");
     }
     if ( request->high_temperature > 0.0 ) {
-        _path_planner->getParams().set_high_temperature( request->high_temperature );
+        _path_planner->setHighTemperature( request->high_temperature );
         success_msg.append(" high_temperature ");
     }
     if ( request->low_temp_iterations > 0 ) {
-        _path_planner->getParams().update_lowtemp_iter( request->low_temp_iterations );
-        success_msg.append(" low_temp_iterations ");
+        // _path_planner->getParams().update_lowtemp_iter( request->low_temp_iterations );
+        // success_msg.append(" low_temp_iterations ");
     }
     if ( request->stop_err > 0.0 ) {
         // _path_planner->getParams().update_stop_err( request->stop_err );
         // success_msg.append(" stop_err ");
     }
     if ( request->num_iter > 0 ) {
-        _path_planner->getParams().update_max_iter( request->num_iter );
+        _path_planner->setNumIter( request->num_iter );
         success_msg.append(" num_iter ");
     }
     if ( request->max_n_backtracking > 0 ) {
@@ -215,6 +223,16 @@ void GVIMPImpl::handleParameterRequest ( const std::shared_ptr<motion_planning_m
 void GVIMPImpl::handlePathRequest ( const std::shared_ptr<motion_planning_msgs::srv::RuntimePathInterface::Request> request,
                                         std::shared_ptr<motion_planning_msgs::srv::RuntimePathInterface::Response> response )
 {
+    if ( request->set_goal.compare("") != 0 ) {
+        std::vector<double> goal_vec;
+        Poco::StringTokenizer goal_str( request->set_goal, " " );
+        for ( Poco::StringTokenizer::Iterator it = goal_str.begin(); it != goal_str.end(); ++it ) {
+            goal_vec.push_back( Poco::NumberParser::parseFloat(*it) );
+        }
+        if ( goal_vec.size() == _path_planner->getRobotSDF().nlinks() ) {
+            _goal_pos = Map<VectorXd, Unaligned>( goal_vec.data(), goal_vec.size() );
+        }
+    }
     if ( request->run_sim && !request->reset_path ) {
         _new_path_needed = true;
         response->success = true;
@@ -288,26 +306,27 @@ gpmp2::SignedDistanceField GVIMPImpl::generateSDF ( grid_map_msgs::msg::GridMap 
     gpmp2::SignedDistanceField gpmp2_sdf( origin, cell_size, gpmp2_data );
 
     // For testing purposes
-    for ( int z=6; z<7; ++z ) {
-        for ( int y=0; y<12; ++y ) {
-            for ( int x=0; x<12; ++x ) {
-                grid_map::Position3 gmTestPoint( double(x)/10.0, double(y)/10.0, double(z)/10.0 );
-                std::cout << gm_sdf.value(gmTestPoint) << " ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << std::endl;
-    }
+    //
+    // for ( int z=6; z<7; ++z ) {
+    //     for ( int y=0; y<12; ++y ) {
+    //         for ( int x=0; x<12; ++x ) {
+    //             grid_map::Position3 gmTestPoint( double(x)/10.0, double(y)/10.0, double(z)/10.0 );
+    //             std::cout << gm_sdf.value(gmTestPoint) << " ";
+    //         }
+    //         std::cout << std::endl;
+    //     }
+    //     std::cout << std::endl;
+    // }
 
-    for ( int z=6; z<7; ++z ) {
-        for ( int y=0; y<12; ++y ) {
-            for ( int x=0; x<12; ++x ) {
-                gtsam::Point3 gtsamTestPoint( double(x)/10.0, double(y)/10.0, double(z)/10.0 );
-                std::cout << gpmp2_sdf.getSignedDistance(gtsamTestPoint) << " ";
-            }
-            std::cout << std::endl;
-        }
-    }
+    // for ( int z=6; z<7; ++z ) {
+    //     for ( int y=0; y<12; ++y ) {
+    //         for ( int x=0; x<12; ++x ) {
+    //             gtsam::Point3 gtsamTestPoint( double(x)/10.0, double(y)/10.0, double(z)/10.0 );
+    //             std::cout << gpmp2_sdf.getSignedDistance(gtsamTestPoint) << " ";
+    //         }
+    //         std::cout << std::endl;
+    //     }
+    // }
 
     return gpmp2_sdf;
 }
@@ -318,7 +337,9 @@ void GVIMPImpl::updateState()
     switch ( _state ) {
         case RobotState::Idle:
             if ( _reset_called ) {
-                _state = RobotState::ResetArm;
+                if ( _curr_path.waypoints.size() > 0 ){
+                    _state = RobotState::ResetArm;
+                }
             }
             if ( _new_path_needed && _start_pos.size() > 0 ) {
                 _state = RobotState::CreatePath;
@@ -342,6 +363,20 @@ void GVIMPImpl::updateState()
         default:
             _state = RobotState::Idle;
     }
+}
+
+std::vector<double> GVIMPImpl::extractLogEntropyFromJoint ( SpMat joint_precision )
+{
+    int nt = _path_planner->getParams().nt();
+    int nx = _path_planner->getParams().nx();
+    std::vector<double> log_entropy( nt );
+    for ( int i=0; i<nt; ++i ) {
+        SpMat fact_prec = joint_precision.middleRows(i, _path_planner->getParams().nx()).middleCols(i, _path_planner->getParams().nx());
+        SparseLDLT ldlt(fact_prec);
+        log_entropy[i] = log(ldlt.determinant());
+    }
+
+    return log_entropy;
 }
 
 int main(int argc, char * argv[])

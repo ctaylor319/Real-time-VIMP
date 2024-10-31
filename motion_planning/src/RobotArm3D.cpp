@@ -76,12 +76,13 @@ void RobotArm3D::generateArm()
     body_spheres.push_back(BodySphere(5, 0.02, gtsam::Point3(0.0, 0.025, 0.0)));
     body_spheres.push_back(BodySphere(5, 0.02, gtsam::Point3(0.0, 0.05, 0.0)));
     body_spheres.push_back(BodySphere(5, 0.02, gtsam::Point3(0.0, 0.075, 0.0)));
-    body_spheres.push_back(BodySphere(5, 0.02, gtsam::Point3(0.0, 0.1, 0.0)));
 
     // Set complete robot model
     Base::_robot = gpmp2::ArmModel{arm, body_spheres};
-    for(size_t i=0; i<Base::_robot.nr_body_spheres(); ++i)
-        std::cout << i << " " << Base::_robot.sphereCenter(i, gtsam::Vector6(-1.345,-1.23,0.264,-0.296,0.389,-1.5)) << std::endl;
+
+    // For testing
+    // for(size_t i=0; i<Base::_robot.nr_body_spheres(); ++i)
+    //     std::cout << i << " " << Base::_robot.sphereCenter(i, gtsam::Vector6(-1.047, -1.57, 0, 0, 0, 0)) << std::endl;
 }
 
 int RobotArm3D::ndof() const { return _ndof; }

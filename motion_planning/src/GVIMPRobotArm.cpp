@@ -246,3 +246,11 @@ void RobotArmMotionPlanner::optimize()
 
 RobotArm3D RobotArmMotionPlanner::getRobotSDF() { return _robot_sdf; }
 GVIMPParams RobotArmMotionPlanner::getParams() { return _params; }
+void RobotArmMotionPlanner::setTotalTime ( double totTime ) { _params.set_total_time( totTime ); }
+void RobotArmMotionPlanner::setSigObs ( double sigObs ) { _params.update_sig_obs( sigObs ); }
+void RobotArmMotionPlanner::setStepSize ( double stepSize ) { _params.update_step_size( stepSize ); }
+void RobotArmMotionPlanner::setInitPrecisionFactor ( double initPrecFac ) { _params.update_initial_precision_factor( initPrecFac ); }
+void RobotArmMotionPlanner::setBoundaryPenalties ( double pen ) { _params.update_boundary_penalties( pen ); }
+void RobotArmMotionPlanner::setTemperature ( double temp ) { _params.set_temperature( temp ); }
+void RobotArmMotionPlanner::setHighTemperature ( double highTemp ) { _params.set_high_temperature( highTemp ); }
+void RobotArmMotionPlanner::setNumIter ( int numIter ) { _params.update_max_iter( numIter ); }

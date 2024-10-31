@@ -226,11 +226,21 @@ def generate_launch_description():
       ],
     output='screen') 
 
-  # Launch arm controller
   start_env_construction_cmd = Node(
     package="env_construction",
     executable="octomap_to_gridmap"
-  )  
+  )
+
+  start_time_parameterization_cmd = Node(
+    package="robot_control",
+    executable="add_time_parameterization"
+  )
+
+  start_robot_control_cmd = Node(
+    package="robot_control",
+    executable="robot_control_interface"
+  )
+
     
   # Create the launch description and populate
   ld = LaunchDescription()
@@ -262,7 +272,9 @@ def generate_launch_description():
   ld.add_action(start_joint_state_broadcaster_cmd)
   ld.add_action(start_robot_state_publisher_cmd)
   ld.add_action(start_octomap_server_cmd)
-  ld.add_action(start_env_construction_cmd)
+  # ld.add_action(start_env_construction_cmd)
+  # ld.add_action(start_time_parameterization_cmd)
+  # ld.add_action(start_robot_control_cmd)
   ld.add_action(start_rviz_cmd)  
   ld.add_action(start_gazebo_ros_spawner_cmd)
 

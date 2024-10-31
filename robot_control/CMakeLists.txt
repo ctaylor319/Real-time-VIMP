@@ -58,6 +58,11 @@ add_executable(robot_control_interface src/robot_control_interface.cpp)
 ament_target_dependencies(add_time_parameterization ${dependencies})
 ament_target_dependencies(robot_control_interface ${dependencies})
 
+install (
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
 # Install cpp executables
 install(
   TARGETS

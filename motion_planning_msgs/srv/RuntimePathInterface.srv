@@ -1,5 +1,6 @@
 bool run_sim
 bool reset_path
+string set_goal
 ---
 bool success
 string message

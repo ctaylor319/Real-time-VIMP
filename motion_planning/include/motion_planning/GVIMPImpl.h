@@ -71,6 +71,13 @@ private:
     void handleParameterRequest ( const std::shared_ptr<motion_planning_msgs::srv::RuntimeParameterInterface::Request> request,
                                     std::shared_ptr<motion_planning_msgs::srv::RuntimeParameterInterface::Response> response );
 
+    /**
+     * @brief: callback function for robot path change requests.
+     *
+     * @param request [in]: service request message
+     *
+     * @param response [out]: service response message
+     */
     void handlePathRequest ( const std::shared_ptr<motion_planning_msgs::srv::RuntimePathInterface::Request> request,
                                 std::shared_ptr<motion_planning_msgs::srv::RuntimePathInterface::Response> response );
 
@@ -88,6 +95,16 @@ private:
      * @brief: Updates the current state of our robot FSM
      */
     void updateState();
+
+    /**
+     * @brief: helper function that extracts the factorized precision matrix
+     * of each waypoint from the joint precision matrix and computes the log entropy.
+     *
+     * @param joint_precision [in]: joint precision of path.
+     *
+     * @return vector of entropies for each waypoint
+     */
+    std::vector<double> extractLogEntropyFromJoint(SpMat joint_precision);
 
     enum RobotState _state;
     std::unique_ptr<vimp::RobotArmMotionPlanner> _path_planner;
