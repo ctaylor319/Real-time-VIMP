@@ -8,11 +8,15 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
+find_package(geometry_msgs REQUIRED)
+
 
 rosidl_generate_interfaces(${PROJECT_NAME} 
 	"msg/WaypointPath.msg"
+  "msg/VisualizedPath.msg"
 	"srv/RuntimeParameterInterface.srv"
-	"srv/RuntimePathInterface.srv")
+	"srv/RuntimePathInterface.srv"
+  DEPENDENCIES geometry_msgs)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

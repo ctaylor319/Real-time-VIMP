@@ -43,7 +43,10 @@ public:
      *
      * @return means and covariances of planned path
      */
-    std::pair<VectorXd, SpMat> findBestPath(VectorXd start_pos, VectorXd goal_pos, gpmp2::SignedDistanceField sdf);
+    std::tuple<VectorXd, SpMat, std::optional<std::vector<VectorXd>>> findBestPath
+    (
+        VectorXd start_pos, VectorXd goal_pos, gpmp2::SignedDistanceField sdf, bool visualize=false
+    );
 
     // Getter/Setter functions
     RobotArm3D getRobotSDF();
@@ -68,7 +71,7 @@ private:
     /**
      * @brief: Helper function for finding the best path
      */
-    void optimize();
+    std::optional<std::vector<VectorXd>> optimize(bool visualize=false);
 };
 
 } //namespace vimp

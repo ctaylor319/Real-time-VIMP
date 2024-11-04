@@ -96,7 +96,10 @@ void RobotArmMotionPlanner::initialize_GH_weights()
     }
 }
 
-std::pair<VectorXd, SpMat> RobotArmMotionPlanner::findBestPath ( VectorXd start_pos, VectorXd goal_pos, gpmp2::SignedDistanceField sdf )
+std::tuple<VectorXd, SpMat, std::optional<std::vector<VectorXd>>> RobotArmMotionPlanner::findBestPath 
+( 
+    VectorXd start_pos, VectorXd goal_pos, gpmp2::SignedDistanceField sdf, bool visualize
+)
 {
     // Parse start and goal pose (position+velocity) into parameters
     VectorXd m0( _params.nx()), mT(_params.nx() );
@@ -113,13 +116,13 @@ std::pair<VectorXd, SpMat> RobotArmMotionPlanner::findBestPath ( VectorXd start_
     _robot_sdf.update_sdf( sdf ); 
 
     // Optimize over given parameters
-    optimize();
-
-    return std::pair<VectorXd, SpMat>( _mean, _precision );
+    auto full_path = optimize( visualize );
+    std::tuple<VectorXd, SpMat, std::optional<std::vector<VectorXd>>> res = { _mean, _precision, full_path };
+    return res;
 }
 
 // Source: ./VIMP/vimp/instances/gvimp/GVIMPRobotSDF.h
-void RobotArmMotionPlanner::optimize()
+std::optional<std::vector<VectorXd>> RobotArmMotionPlanner::optimize ( bool visualize )
 {
     /// parameters
     int n_states = _params.nt();
@@ -136,9 +139,6 @@ void RobotArmMotionPlanner::optimize()
     MatrixXd Qc{ MatrixXd::Identity(dim_conf, dim_conf)*_params.coeff_Qc() };
     MatrixXd K0_fixed{ MatrixXd::Identity(dim_state, dim_state)/_params.boundary_penalties() };
 
-    /// Vector of base factored optimizers
-    vector<std::shared_ptr<gvi::GVIFactorizedBase>> vec_factors;
-
     auto robot_model = _robot_sdf.RobotModel();
     auto sdf = _robot_sdf.sdf();
     double sig_obs = _params.sig_obs(), eps_sdf = _params.eps_sdf();
@@ -151,23 +151,160 @@ void RobotArmMotionPlanner::optimize()
     /// prior 
     double delt_t = _params.total_time() / N;
 
-    for ( int i=0; i<n_states; ++i) {
+    if ( visualize ) {
+        
+        std::vector<VectorXd> res;
+        
+        for ( int i=1; i<=_params.max_iter(); ++i) {
 
-        // initial state
-        VectorXd theta_i{ start_theta + double(i) * (goal_theta - start_theta) / N };
+            /// Vector of base factored optimizers
+            vector<std::shared_ptr<gvi::GVIFactorizedBase>> vec_factors;
+            _params.set_temperature(temperature);
+            _params.set_high_temperature(high_temperature);
 
-        // initial velocity: must have initial velocity for the fitst state??
-        theta_i.segment(dim_conf, dim_conf) = avg_vel;
-        joint_init_theta.segment(i*dim_state, dim_state) = std::move( theta_i );   
+            for ( int i=0; i<n_states; ++i) {
 
-        MinimumAccGP lin_gp{ Qc, i, delt_t, start_theta };
+                // initial state
+                VectorXd theta_i{ start_theta + double(i) * (goal_theta - start_theta) / N };
 
-        // fixed start and goal priors
-        // Factor Order: [fixed_gp_0, lin_gp_1, obs_1, ..., lin_gp_(N-1), obs_(N-1), lin_gp_(N), fixed_gp_(N)] 
-        if ( i==0 || i==n_states-1 ) {
+                // initial velocity: must have initial velocity for the fitst state??
+                theta_i.segment(dim_conf, dim_conf) = avg_vel;
+                joint_init_theta.segment(i*dim_state, dim_state) = std::move( theta_i );   
 
-            // lin GP factor for the first and the last support state
-            if ( i==n_states-1 ) {
+                MinimumAccGP lin_gp{ Qc, i, delt_t, start_theta };
+
+                // fixed start and goal priors
+                // Factor Order: [fixed_gp_0, lin_gp_1, obs_1, ..., lin_gp_(N-1), obs_(N-1), lin_gp_(N), fixed_gp_(N)] 
+                if ( i==0 || i==n_states-1 ) {
+
+                    // lin GP factor for the first and the last support state
+                    if ( i==n_states-1 ) {
+                        vec_factors.emplace_back( new gvi::LinearGpPrior{2*dim_state, 
+                                                                    dim_state, 
+                                                                    cost_linear_gp, 
+                                                                    lin_gp, 
+                                                                    n_states, 
+                                                                    i-1, 
+                                                                    _params.temperature(), 
+                                                                    _params.high_temperature()} );
+                    }
+
+                    // Fixed gp factor
+                    FixedPriorGP fixed_gp{ K0_fixed, MatrixXd{theta_i} };
+                    vec_factors.emplace_back( new FixedGpPrior{dim_state, 
+                                                                dim_state, 
+                                                                cost_fixed_gp, 
+                                                                fixed_gp, 
+                                                                n_states, 
+                                                                i,
+                                                                _params.temperature(), 
+                                                                _params.high_temperature()} );
+
+                }else{
+                    // linear gp factors
+                    vec_factors.emplace_back( new gvi::LinearGpPrior{2*dim_state, 
+                                                                dim_state, 
+                                                                cost_linear_gp, 
+                                                                lin_gp, 
+                                                                n_states, 
+                                                                i-1, 
+                                                                _params.temperature(), 
+                                                                _params.high_temperature()} );
+
+                    // collision factor
+                    vec_factors.emplace_back( new GVIFactorizedSDF<gpmp2::ArmModel>{dim_conf, 
+                                                                        dim_state, 
+                                                                        _params.GH_degree(),
+                                                                        cost_obstacle<gpmp2::ArmModel>, 
+                                                                        gpmp2::ObstacleSDFFactor<gpmp2::ArmModel>{gtsam::symbol('x', i), 
+                                                                        robot_model, 
+                                                                        sdf, 
+                                                                        1.0/sig_obs, 
+                                                                        eps_sdf}, 
+                                                                        n_states, 
+                                                                        i, 
+                                                                        temperature, 
+                                                                        high_temperature,
+                                                                        _nodes_weights_map} );    
+                }
+            }
+            
+            // The joint optimizer
+            gvi::NGDGH<gvi::GVIFactorizedBase> optimizer{ vec_factors, 
+                                                dim_state, 
+                                                n_states, 
+                                                i, 
+                                                _params.temperature(), 
+                                                _params.high_temperature() };
+
+            optimizer.set_max_iter_backtrack( _params.max_n_backtrack() );
+            optimizer.set_niter_low_temperature( _params.max_iter_lowtemp() );
+            optimizer.set_stop_err( _params.stop_err() );
+
+            // optimizer.update_file_names(_params.saving_prefix());
+            optimizer.set_mu( joint_init_theta );
+
+            optimizer.initilize_precision_matrix( _params.initial_precision_factor() );
+
+            // optimizer.set_GH_degree(_params.GH_degree());
+            optimizer.set_step_size_base( _params.step_size() ); // a local optima
+
+            optimizer.optimize( true );
+
+            res.push_back( optimizer.mean() );
+
+            if ( i == _params.max_iter() ) {
+                _mean = optimizer.mean();
+                _precision = optimizer.precision();
+            }
+        }
+        return res;
+    }
+    else {
+
+        /// Vector of base factored optimizers
+        vector<std::shared_ptr<gvi::GVIFactorizedBase>> vec_factors;
+
+        for ( int i=0; i<n_states; ++i) {
+
+            // initial state
+            VectorXd theta_i{ start_theta + double(i) * (goal_theta - start_theta) / N };
+
+            // initial velocity: must have initial velocity for the fitst state??
+            theta_i.segment(dim_conf, dim_conf) = avg_vel;
+            joint_init_theta.segment(i*dim_state, dim_state) = std::move( theta_i );   
+
+            MinimumAccGP lin_gp{ Qc, i, delt_t, start_theta };
+
+            // fixed start and goal priors
+            // Factor Order: [fixed_gp_0, lin_gp_1, obs_1, ..., lin_gp_(N-1), obs_(N-1), lin_gp_(N), fixed_gp_(N)] 
+            if ( i==0 || i==n_states-1 ) {
+
+                // lin GP factor for the first and the last support state
+                if ( i==n_states-1 ) {
+                    vec_factors.emplace_back( new gvi::LinearGpPrior{2*dim_state, 
+                                                                dim_state, 
+                                                                cost_linear_gp, 
+                                                                lin_gp, 
+                                                                n_states, 
+                                                                i-1, 
+                                                                _params.temperature(), 
+                                                                _params.high_temperature()} );
+                }
+
+                // Fixed gp factor
+                FixedPriorGP fixed_gp{ K0_fixed, MatrixXd{theta_i} };
+                vec_factors.emplace_back( new FixedGpPrior{dim_state, 
+                                                            dim_state, 
+                                                            cost_fixed_gp, 
+                                                            fixed_gp, 
+                                                            n_states, 
+                                                            i,
+                                                            _params.temperature(), 
+                                                            _params.high_temperature()} );
+
+            }else{
+                // linear gp factors
                 vec_factors.emplace_back( new gvi::LinearGpPrior{2*dim_state, 
                                                             dim_state, 
                                                             cost_linear_gp, 
@@ -176,72 +313,50 @@ void RobotArmMotionPlanner::optimize()
                                                             i-1, 
                                                             _params.temperature(), 
                                                             _params.high_temperature()} );
+
+                // collision factor
+                vec_factors.emplace_back( new GVIFactorizedSDF<gpmp2::ArmModel>{dim_conf, 
+                                                                    dim_state, 
+                                                                    _params.GH_degree(),
+                                                                    cost_obstacle<gpmp2::ArmModel>, 
+                                                                    gpmp2::ObstacleSDFFactor<gpmp2::ArmModel>{gtsam::symbol('x', i), 
+                                                                    robot_model, 
+                                                                    sdf, 
+                                                                    1.0/sig_obs, 
+                                                                    eps_sdf}, 
+                                                                    n_states, 
+                                                                    i, 
+                                                                    temperature, 
+                                                                    high_temperature,
+                                                                    _nodes_weights_map} );    
             }
-
-            // Fixed gp factor
-            FixedPriorGP fixed_gp{ K0_fixed, MatrixXd{theta_i} };
-            vec_factors.emplace_back( new FixedGpPrior{dim_state, 
-                                                        dim_state, 
-                                                        cost_fixed_gp, 
-                                                        fixed_gp, 
-                                                        n_states, 
-                                                        i,
-                                                        _params.temperature(), 
-                                                        _params.high_temperature()} );
-
-        }else{
-            // linear gp factors
-            vec_factors.emplace_back( new gvi::LinearGpPrior{2*dim_state, 
-                                                        dim_state, 
-                                                        cost_linear_gp, 
-                                                        lin_gp, 
-                                                        n_states, 
-                                                        i-1, 
-                                                        _params.temperature(), 
-                                                        _params.high_temperature()} );
-
-            // collision factor
-            vec_factors.emplace_back( new GVIFactorizedSDF<gpmp2::ArmModel>{dim_conf, 
-                                                                dim_state, 
-                                                                _params.GH_degree(),
-                                                                cost_obstacle<gpmp2::ArmModel>, 
-                                                                gpmp2::ObstacleSDFFactor<gpmp2::ArmModel>{gtsam::symbol('x', i), 
-                                                                robot_model, 
-                                                                sdf, 
-                                                                1.0/sig_obs, 
-                                                                eps_sdf}, 
-                                                                n_states, 
-                                                                i, 
-                                                                temperature, 
-                                                                high_temperature,
-                                                                _nodes_weights_map} );    
         }
-    }
 
-    /// The joint optimizer
-    gvi::NGDGH<gvi::GVIFactorizedBase> optimizer{ vec_factors, 
+        gvi::NGDGH<gvi::GVIFactorizedBase> optimizer{ vec_factors, 
                                         dim_state, 
                                         n_states, 
                                         _params.max_iter(), 
                                         _params.temperature(), 
                                         _params.high_temperature() };
 
-    optimizer.set_max_iter_backtrack( _params.max_n_backtrack() );
-    optimizer.set_niter_low_temperature( _params.max_iter_lowtemp() );
-    optimizer.set_stop_err( _params.stop_err() );
+        optimizer.set_max_iter_backtrack( _params.max_n_backtrack() );
+        optimizer.set_niter_low_temperature( _params.max_iter_lowtemp() );
+        optimizer.set_stop_err( _params.stop_err() );
 
-    // optimizer.update_file_names(_params.saving_prefix());
-    optimizer.set_mu( joint_init_theta );
+        // optimizer.update_file_names(_params.saving_prefix());
+        optimizer.set_mu( joint_init_theta );
 
-    optimizer.initilize_precision_matrix( _params.initial_precision_factor() );
+        optimizer.initilize_precision_matrix( _params.initial_precision_factor() );
 
-    // optimizer.set_GH_degree(_params.GH_degree());
-    optimizer.set_step_size_base( _params.step_size() ); // a local optima
+        // optimizer.set_GH_degree(_params.GH_degree());
+        optimizer.set_step_size_base( _params.step_size() ); // a local optima
 
-    optimizer.optimize( true );
+        optimizer.optimize( false );
 
-    _mean = optimizer.mean();
-    _precision = optimizer.precision();
+        _mean = optimizer.mean();
+        _precision = optimizer.precision();
+        return std::nullopt;
+    }
 }
 
 RobotArm3D RobotArmMotionPlanner::getRobotSDF() { return _robot_sdf; }

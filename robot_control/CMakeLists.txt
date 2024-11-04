@@ -54,9 +54,7 @@ link_directories(${OCTOMAP_LIBRARY_DIRS})
 # Tells CMake to create executable targets. Make sure CMake
 # knows about the program's dependencies.
 add_executable(add_time_parameterization src/add_time_parameterization.cpp)
-add_executable(robot_control_interface src/robot_control_interface.cpp)
 ament_target_dependencies(add_time_parameterization ${dependencies})
-ament_target_dependencies(robot_control_interface ${dependencies})
 
 install (
   DIRECTORY launch
@@ -67,12 +65,6 @@ install (
 install(
   TARGETS
   add_time_parameterization
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(
-  TARGETS
-  robot_control_interface
   DESTINATION lib/${PROJECT_NAME}
 )
 

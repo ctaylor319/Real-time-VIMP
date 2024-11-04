@@ -33,7 +33,9 @@ private:
     rclcpp::Subscription<grid_map_msgs::msg::GridMap>::SharedPtr _gridmap_subscriber;
     rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr _path_status_subscriber;
     rclcpp::Subscription<control_msgs::msg::JointTrajectoryControllerState>::SharedPtr _robot_state_subscriber;
+    rclcpp::Subscription<visualization_msgs::msg::MarkerArray>::SharedPtr _occupied_cells_subscriber;
     rclcpp::Publisher<motion_planning_msgs::msg::WaypointPath>::SharedPtr _path_publisher;
+    rclcpp::Publisher<motion_planning_msgs::msg::VisualizedPath>::SharedPtr _iterative_path_publisher;
     rclcpp::Service<motion_planning_msgs::srv::RuntimeParameterInterface>::SharedPtr _parameter_service;
     rclcpp::Service<motion_planning_msgs::srv::RuntimePathInterface>::SharedPtr _path_service;
 
@@ -60,6 +62,14 @@ private:
      * @param msg [in]: message containing joint positions & errors.
      */
     void stateCallback(control_msgs::msg::JointTrajectoryControllerState msg);
+
+    /**
+     * @brief: callback function for all occupied cells in the octomap. Used
+     * to provide a 3D landscape for plotting purposes.
+     *
+     * @param msg [in]: message containing cell data
+     */
+    void cellsCallback(visualization_msgs::msg::MarkerArray msg);
 
     /**
      * @brief: callback function for robot parameter change requests.
@@ -111,4 +121,7 @@ private:
     VectorXd _start_pos, _goal_pos;
     bool _new_path_needed, _reset_called;
     motion_planning_msgs::msg::WaypointPath _curr_path;
+    motion_planning_msgs::msg::VisualizedPath _vis_path;
+    std::vector<geometry_msgs::msg::Point> _occupied_cells;
+    
 };

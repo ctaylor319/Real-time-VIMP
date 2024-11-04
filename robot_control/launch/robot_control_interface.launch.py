@@ -1,4 +1,5 @@
 import os
+import sys
 from launch import LaunchDescription
 from launch.actions import AppendEnvironmentVariable, DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
@@ -10,6 +11,8 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
 
+  DeclareLaunchArgument('visualize', default_value='False')
+
   start_env_construction_cmd = Node(
     package="env_construction",
     executable="octomap_to_gridmap"
@@ -17,17 +20,14 @@ def generate_launch_description():
 
   start_gvimp_cmd = Node(
     package="motion_planning",
-    executable="GVIMPImpl"
+    executable="GVIMPImpl",
+    output="screen",
+    parameters=[{"visualize": LaunchConfiguration('visualize')}]
   )
 
   start_time_parameterization_cmd = Node(
     package="robot_control",
     executable="add_time_parameterization"
-  )
-
-  start_robot_control_cmd = Node(
-    package="robot_control",
-    executable="robot_control_interface"
   )
 
     
@@ -38,7 +38,6 @@ def generate_launch_description():
   ld.add_action(start_env_construction_cmd)
   ld.add_action(start_gvimp_cmd)
   ld.add_action(start_time_parameterization_cmd)
-  #ld.add_action(start_robot_control_cmd)
 
   return ld
 

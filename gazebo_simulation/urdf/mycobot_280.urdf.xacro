@@ -549,7 +549,7 @@
             <!-- openni plugin has the x pointing towards the scene, so rotate to have z -->
             <pose frame="lidar_rot">0.0 0.0 0.0 0.0 0.0 0.0</pose>
 			<!--origin xyz="0 0 0" rpy="0 0 0"/-->
-			<visualize>true</visualize>
+			<visualize>false</visualize>
 			<update_rate>30</update_rate>
 			<ray> 
 				<scan>
@@ -560,8 +560,8 @@
 					</horizontal>
 					<vertical>
 						<samples>25</samples>
-						<min_angle>-0.5</min_angle>
-						<max_angle>0.5</max_angle>
+						<min_angle>-1</min_angle>
+						<max_angle>1</max_angle>
 					</vertical>
 				</scan>
 				<range>

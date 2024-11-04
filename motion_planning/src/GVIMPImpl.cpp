@@ -16,7 +16,11 @@
 #include <grid_map_msgs/msg/grid_map.hpp>
 #include <std_msgs/msg/bool.hpp>
 #include <control_msgs/msg/joint_trajectory_controller_state.hpp>
+#include <geometry_msgs/msg/point.hpp>
+#include <geometry_msgs/msg/pose_array.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
 #include "motion_planning_msgs/msg/waypoint_path.hpp"
+#include "motion_planning_msgs/msg/visualized_path.hpp"
 #include "motion_planning_msgs/srv/runtime_parameter_interface.hpp"
 #include "motion_planning_msgs/srv/runtime_path_interface.hpp"
 
@@ -42,13 +46,18 @@ _reset_called(false)
         std::bind( &GVIMPImpl::pathStatusCallback, this, std::placeholders::_1 ) );
     _robot_state_subscriber = create_subscription<control_msgs::msg::JointTrajectoryControllerState>( "/arm_controller/controller_state", 10,
         std::bind( &GVIMPImpl::stateCallback, this, std::placeholders::_1 ) );
+    _occupied_cells_subscriber = create_subscription<visualization_msgs::msg::MarkerArray>("/occupied_cells_vis_array", 10,
+        std::bind( &GVIMPImpl::cellsCallback, this, std::placeholders::_1 ) );
     _path_publisher = create_publisher<motion_planning_msgs::msg::WaypointPath>( "/vimp_path", 10 );
+    _iterative_path_publisher = create_publisher<motion_planning_msgs::msg::VisualizedPath>( "/vis_path", 10 );
     _parameter_service = create_service<motion_planning_msgs::srv::RuntimeParameterInterface>( "robot_runtime_interface/parameter_tuning",
         std::bind(&GVIMPImpl::handleParameterRequest, this, std::placeholders::_1, std::placeholders::_2) );
     _path_service = create_service<motion_planning_msgs::srv::RuntimePathInterface>( "robot_runtime_interface/set_path",
         std::bind(&GVIMPImpl::handlePathRequest, this, std::placeholders::_1, std::placeholders::_2) );
 
     _path_planner = std::unique_ptr<vimp::RobotArmMotionPlanner>( new vimp::RobotArmMotionPlanner() ); // Instance of the motion planner
+
+    this->declare_parameter("visualize", false);
 
     // Initialize config file reader
     Poco::Util::AbstractConfiguration *cfg;
@@ -104,20 +113,39 @@ void GVIMPImpl::gridMapCallback ( grid_map_msgs::msg::GridMap msg )
         // Find new path
         _new_path_needed = false;
         gpmp2::SignedDistanceField sdf = generateSDF( msg );
-        std::pair<VectorXd, SpMat> res = _path_planner->findBestPath( _start_pos, _goal_pos, sdf );
-        
+        bool vis = this->get_parameter("visualize").as_bool();
+        std::string vis_str = vis ? "Visualization mode ON. NOTE: algorithm will take longer to run" : "Visualization mode OFF.";
+        RCLCPP_INFO(this->get_logger(), vis_str.c_str());
+        std::tuple<VectorXd, SpMat, std::optional<std::vector<VectorXd>>> res = _path_planner->findBestPath( _start_pos, _goal_pos, sdf, vis );
+        VectorXd means = std::get<0>(res);
+        SpMat covs = std::get<1>(res);
+
         // Set message data
         _curr_path.waypoints.clear();
         _curr_path.waypoint_size = _path_planner->getParams().nx();
-        std::vector<double> waypoint_entropy = extractLogEntropyFromJoint( res.second );
-        for ( int i=0; i<res.first.size(); ++i ) {
-            _curr_path.waypoints.push_back( res.first[i] );
+        std::vector<double> waypoint_entropy = extractLogEntropyFromJoint( covs );
+        for ( int i=0; i<means.size(); ++i ) {
+            _curr_path.waypoints.push_back( means[i] );
         }
         for ( int i=0; i<waypoint_entropy.size(); ++i ) {
             _curr_path.waypoint_entropies.push_back( waypoint_entropy[i] );
             // std::cout << waypoint_entropy[i] << std::endl;
         }
         _path_publisher->publish( _curr_path );
+
+        if ( std::get<2>(res).has_value() ) {
+            std::vector<VectorXd> iter_path = std::get<2>(res).value();
+            _vis_path.waypoints.clear();
+            _vis_path.num_iter = _path_planner->getParams().max_iter();
+            _vis_path.num_waypoints_per_path = _path_planner->getParams().nt();
+            _vis_path.waypoint_size = _path_planner->getParams().nx();
+            for ( int i=0; i<iter_path.size(); ++i ) {
+                for ( int j=0; j<iter_path[i].size(); ++j )
+                _vis_path.waypoints.push_back( iter_path[i][j] );
+            }
+            _vis_path.env_render = _occupied_cells;
+            _iterative_path_publisher->publish( _vis_path );
+        }
     }
     else if ( _state == RobotState::ResetArm ) {
 
@@ -134,6 +162,17 @@ void GVIMPImpl::gridMapCallback ( grid_map_msgs::msg::GridMap msg )
         _curr_path.waypoints.clear();
     }
     updateState();
+}
+
+void GVIMPImpl::cellsCallback ( visualization_msgs::msg::MarkerArray msg )
+{
+    std::vector<geometry_msgs::msg::Point> points;
+    for ( auto it : msg.markers ) {
+        if ( it.points.size() > 0 ) {
+            points.insert( points.end(), it.points.begin(), it.points.end() );
+        }
+    }
+    _occupied_cells = points;
 }
 
 void GVIMPImpl::handleParameterRequest ( const std::shared_ptr<motion_planning_msgs::srv::RuntimeParameterInterface::Request> request,
