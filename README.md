@@ -24,23 +24,26 @@ Capstone project for Georgia Tech's MS-ROBO program. Implements hzyu17's motion-
     - goal: goal joint positions of your robot arm
     - urdf: name of the urdf file you're using
     - srdf: name of the srdf file you're using
-  - Build packages
-    - `cd ..`
-    - `colcon build`
   - Build SparseGH_weights file
     - `cd src/motion_planning/VIMP`
     - Follow directions from VIMP's [github page](https://github.com/hzyu17/VIMP/tree/master) to build the repo
     - cd to the build directory you made
     - `./src/generate_sigmapts`
     - `./src/save_SparseGH_weights`
+  - Build packages
+    - `cd ..`
+    - `colcon build`
 
 ## Launching
-  - Depth sensor must publish pointcloud2 messages to the `/cloud_in` topic.
+  - Depth sensor must publish PointCloud2 messages to the `input_cloud_topic` LaunchArgument in `octomap_server_launch.py` and have a valid transformation matrix to the base frame.
+    - The easiest way to do the first part is to change the default value to whatever topic you are currently publishing to.
+      - For example, in `mycobot_280.urdf.xacro` PointCloud2 messages are published to `\ray\pointcloud2` under the `ray_plugin`. Therefore, you would change `\cloud_in` to `\ray\pointcloud2` in the octomap server launch file.
+    - If you get a "message filter dropping message" error you have an incomplete transformation to your sensor. You can check your transformation tree in rviz by pulling up the tf plugin. Also note that the base link for the tf matrix must be `world`.
   - Current launch sequence:
-    - `ros2 launch gazebo_simulation robot_with_control_added_simulation.launch.py`
-      - This will start up an empty world in gazebo with pure gravity compensation being added to hold the robot stationary. It also launches environment reconstruction and robot control.
-    - In a new tab, `ros2 run motion_planning GVIMPImpl`
-      - This will run the motion planner with environmental input
+    - `ros2 launch six_dof_arm_gazebo six_dof_arm_simulation.launch.py`
+      - This will start up an empty world in gazebo with pure gravity compensation being added to hold the robot stationary.
+    - In a new tab, `ros2 launch six_dof_arm_controller robot_control_interface.launch.py`
+      - This will start the autonomy package.
     - This will have the robot move towards the goal position set in the config file
     - (Optional) In a new tab, `rqt`
       - If you don't have rqt, run `sudo apt-get install ros-${ROS_DISTRO}-rqt*`

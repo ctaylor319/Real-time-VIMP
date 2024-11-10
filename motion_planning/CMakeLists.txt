@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(motion_planning)
+project(motion_planning CXX C CUDA)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	add_compile_options(-Wall -Wextra -Wpedantic)
@@ -37,6 +37,20 @@ find_package(Boost COMPONENTS date_time REQUIRED)
 find_package(Boost COMPONENTS serialization REQUIRED)
 
 find_package(OpenMP)
+
+# Set the policy CMP0104 to NEW
+if(POLICY CMP0104)
+  cmake_policy(SET CMP0104 NEW)
+endif()
+
+# Set the CUDA architectures you want to target
+set(CMAKE_CUDA_ARCHITECTURES "52;60;61;70;75;80")
+
+# Cuda
+find_package(CUDA REQUIRED)
+include_directories(${CUDA_INCLUDE_DIRS})
+include_directories(${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}; -arch=${CUDA_ARCH}; -std=c++17; --expt-extended-lambda)
 
 add_compile_definitions(GTSAM_ENV)
 add_compile_definitions(GVI_SUBDUR_ENV)
@@ -96,7 +110,8 @@ target_link_libraries(GVIMPImpl ROBOT_ARM_LIBRARY GVI_ROBOT_LIBRARY ${GTSAM_LIBR
                         ${libSpGH_LIBRARY} ${Matlab_MEX_LIBRARY})
 
 file(GLOB_RECURSE SIM_CONFIG "src/sim_config.xml")
-install(FILES ${SIM_CONFIG} DESTINATION "../robot_control/lib")
+install(FILES ${SIM_CONFIG} DESTINATION "../six_dof_arm_controller/lib")
+install(FILES ${SIM_CONFIG} DESTINATION "../mobile_robot_controller/lib")
 
 # Install cpp executables
 
