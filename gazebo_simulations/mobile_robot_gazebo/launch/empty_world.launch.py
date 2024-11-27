@@ -25,6 +25,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration, PythonExpression
 from launch.conditions import IfCondition
 from launch_ros.substitutions import FindPackageShare
+from launch_ros.actions import Node
 
 
 def generate_launch_description():
@@ -35,6 +36,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     x_pose = LaunchConfiguration('x_pose', default='0.0')
     y_pose = LaunchConfiguration('y_pose', default='0.0')
+    filter_ground = LaunchConfiguration('filter_ground', default='true')
     headless = LaunchConfiguration('headless')
     use_simulator = LaunchConfiguration('use_simulator')
 
@@ -87,8 +89,17 @@ def generate_launch_description():
     # Start octomap server    
     start_octomap_server_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-        os.path.join(pkg_octomap_server, 'launch', 'octomap_server_launch.py')),
-        condition=IfCondition(PythonExpression([use_simulator, ' and not ', headless]))
+            os.path.join(pkg_octomap_server, 'launch', 'octomap_server_launch.py'))
+    )
+
+    start_env_construction_cmd = Node(
+    package="env_construction",
+    executable="octomap_to_gridmap"
+    )
+
+    start_time_parameterization_cmd = Node(
+    package="robot_control",
+    executable="add_time_parameterization"
     )
 
     ld = LaunchDescription()
@@ -101,5 +112,6 @@ def generate_launch_description():
     ld.add_action(robot_state_publisher_cmd)
     ld.add_action(start_octomap_server_cmd)
     ld.add_action(spawn_turtlebot_cmd)
+    ld.add_action(start_env_construction_cmd)
 
     return ld

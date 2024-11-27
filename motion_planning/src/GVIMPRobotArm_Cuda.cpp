@@ -1,23 +1,29 @@
 /**
  * @copyright Georgia Institute of Technology, 2024
- * @file: GVIMPRobotArm.cpp
+ * @file: GVIMPRobotArm_Cuda.cpp
  * @author: ctaylor319@gatech.edu
- * @date: 10/03/2024
+ * @date: 11/10/2024
  *
  */
 
+#include <optional>
+
 #include <helpers/ExperimentRunner.h>
+#include <GaussianVI/gp/factorized_opts_linear_Cuda.h>
+#include <GaussianVI/gp/cost_functions.h>
+#include <GaussianVI/ngd/NGD-GH-Cuda.h>
 
 #include <Poco/Util/AbstractConfiguration.h>
 #include <Poco/Util/XMLConfiguration.h>
 #include <Poco/StringTokenizer.h>
 #include <Poco/NumberParser.h>
 
-#include "GVIMPRobotArm.h"
+#include "GVIMPRobotArm_Cuda.h"
+
 
 using namespace vimp;
 
-GVIMPRobotArm::GVIMPRobotArm()
+GVIMPRobotArm_Cuda::GVIMPRobotArm_Cuda()
 {
     // default values
     double total_time = 5.0; int n_states = 10; double coeff_Qc = 1.0;
@@ -65,17 +71,19 @@ GVIMPRobotArm::GVIMPRobotArm()
                             eps_sdf, radius, step_size, num_iter, init_precision_factor, 
                             boundary_penalties, temperature, high_temperature, low_temp_iterations, 
                             stop_err, max_n_backtracking, "map_bookshelf", "" );
-    _robot_sdf = RobotArm3D( _params.eps_sdf(), _params.radius() );
+    _ndof = 1;
+    _nlinks = 6;
     initialize_GH_weights();
 }
 
-GVIMPRobotArm::~GVIMPRobotArm()
+GVIMPRobotArm_Cuda::~GVIMPRobotArm_Cuda()
 {
 
 }
 
-void GVIMPRobotArm::initialize_GH_weights()
+void GVIMPRobotArm_Cuda::initialize_GH_weights()
 {
+    QuadratureWeightsMap nodes_weights_map;
     std::string GH_map_file{ source_root+"/GaussianVI/quadrature/SparseGHQuadratureWeights.bin" };
     try {
         std::ifstream ifs( GH_map_file, std::ios::binary );
@@ -86,33 +94,36 @@ void GVIMPRobotArm::initialize_GH_weights()
 
         std::cout << "Opening file for GH weights reading in file: " << GH_map_file << std::endl;
         boost::archive::binary_iarchive ia( ifs );
-        ia >> _nodes_weights_map;
+        ia >> nodes_weights_map;
 
     } catch ( const boost::archive::archive_exception& e ) {
         std::cerr << "Boost archive exception: " << e.what() << std::endl;
     } catch ( const std::exception& e ) {
         std::cerr << "Standard exception: " << e.what() << std::endl;
     }
+
+    _nodes_weights_map_ptr = std::make_shared<QuadratureWeightsMap>(nodes_weights_map);
 }
 
-std::tuple<VectorXd, SpMat, std::optional<std::vector<VectorXd>>> GVIMPRobotArm::findBestPath 
+std::tuple<VectorXd, SpMat, std::optional<std::vector<VectorXd>>> GVIMPRobotArm_Cuda::findBestPath 
 ( 
     VectorXd start_pos, VectorXd goal_pos, gpmp2::SignedDistanceField sdf, bool visualize
 )
 {
     // Parse start and goal pose (position+velocity) into parameters
     VectorXd m0( _params.nx()), mT(_params.nx() );
-    VectorXd m0_pos( _params.nu() ); VectorXd mT_pos( _params.nu() );
+    VectorXd m0_pos(6); VectorXd mT_pos(6);
     m0_pos = start_pos; mT_pos = goal_pos;
-    m0.block(0, 0, _params.nu(), 1) = m0_pos;
-    m0.block(_params.nu(), 0, _params.nu(), 1) = VectorXd::Zero(_params.nu());
-    mT.block(0, 0, _params.nu(), 1) = mT_pos;
-    mT.block(_params.nu(), 0, _params.nu(), 1) = VectorXd::Zero(_params.nu());
+    m0.block(0, 0, 6, 1) = m0_pos;
+    m0.block(6, 0, 6, 1) = VectorXd::Zero(6);
+    mT.block(0, 0, 6, 1) = mT_pos;
+    mT.block(6, 0, 6, 1) = VectorXd::Zero(6);
     _params.set_m0( m0 );
     _params.set_mT( mT );
 
     // Update internal SDF model
-    _robot_sdf.update_sdf( sdf ); 
+    // _robot_sdf.update_sdf( sdf );
+    _sdf = sdf;
 
     // Optimize over given parameters
     auto full_path = optimize( visualize );
@@ -120,12 +131,12 @@ std::tuple<VectorXd, SpMat, std::optional<std::vector<VectorXd>>> GVIMPRobotArm:
     return res;
 }
 
-std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
+std::optional<std::vector<VectorXd>> GVIMPRobotArm_Cuda::optimize ( bool visualize )
 {
     // parameters
     int n_states = _params.nt();
     int N = n_states - 1;
-    const int dim_conf = _robot_sdf.ndof() * _robot_sdf.nlinks();
+    const int dim_conf = _ndof * _nlinks;
     const int dim_state = 2 * dim_conf;
 
     // joint dimension
@@ -137,11 +148,44 @@ std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
     MatrixXd Qc{ MatrixXd::Identity(dim_conf, dim_conf)*_params.coeff_Qc() };
     MatrixXd K0_fixed{ MatrixXd::Identity(dim_state, dim_state)/_params.boundary_penalties() };
 
-    auto robot_model = _robot_sdf.RobotModel();
-    auto sdf = _robot_sdf.sdf();
+    auto sdf = _sdf;
     double sig_obs = _params.sig_obs(), eps_sdf = _params.eps_sdf();
     double temperature = _params.temperature(), high_temperature = _params.high_temperature();
 
+    _gh_ptr = std::make_shared<SparseGaussHermite_Cuda<GHFunction>>(SparseGaussHermite_Cuda<GHFunction>{_params.GH_degree(),
+                                                        dim_conf, _nodes_weights_map_ptr});
+
+    VectorXd a(_nlinks);
+    a << 0.0, -0.1104, -0.096, 0.0, 0.0, 0.0;
+    VectorXd alpha(_nlinks);
+    alpha << M_PI/2.0, 0.0, 0.0, M_PI/2.0, M_PI/2.0, -M_PI/2.0;
+    VectorXd d(_nlinks);
+    d << 0.13156, 0.0, 0.0, 0.06062, 0.07318, -0.0456;
+    VectorXd theta_bias(_nlinks);
+    theta_bias << M_PI/2.0, -M_PI/2.0, 0.0, -M_PI/2.0, M_PI/2.0, 0.0;
+
+    VectorXd radii(12);
+    radii << 0.06, 0.06, 0.05, 0.05, 0.04, 0.04, 0.03, 0.03, 0.02, 0.02, 0.02, 0.02;
+    
+    VectorXi frames(12);
+    frames << 0, 0, 1, 1, 2, 2, 3, 4, 5, 5, 5, 5;
+
+    MatrixXd centers(12, 3);
+    centers <<    0.0, -0.075,     0.0,
+                  0.0,    0.0,     0.0,
+               0.1104,    0.0, 0.06062,
+                  0.0,    0.0, 0.06062,
+                0.096,    0.0,     0.0,
+                  0.0,    0.0,     0.0,
+                  0.0,    0.0,     0.0,
+                  0.0,    0.0,     0.0,
+                  0.0,    0.0,     0.0,
+                  0.0,  0.025,     0.0,
+                  0.0,   0.05,     0.0,
+                  0.0,  0.075,     0.0;
+
+    _cuda_ptr = std::make_shared<CudaOperation_3dArm>(CudaOperation_3dArm{a, alpha, d, theta_bias, radii, frames, centers,
+                                                     _params.sig_obs(), _params.eps_sdf(), sdf});
     // initial values
     VectorXd joint_init_theta{ VectorXd::Zero(ndim) };
     VectorXd avg_vel{ (goal_theta.segment(0, dim_conf) - start_theta.segment(0, dim_conf)) / _params.total_time() };
@@ -153,10 +197,10 @@ std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
         
         std::vector<VectorXd> res;
         
-        for ( int i=1; i<=_params.max_iter(); ++i) {
+        for ( int n=1; n<=_params.max_iter(); ++n) {
 
             // Vector of base factored optimizers
-            vector<std::shared_ptr<gvi::GVIFactorizedBase>> vec_factors;
+            vector<std::shared_ptr<gvi::GVIFactorizedBase_Cuda>> vec_factors;
             _params.set_temperature(temperature);
             _params.set_high_temperature(high_temperature);
 
@@ -209,29 +253,27 @@ std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
                                                                 _params.temperature(), 
                                                                 _params.high_temperature()} );
 
-                    // collision factor
-                    vec_factors.emplace_back( new GVIFactorizedSDF<gpmp2::ArmModel>{dim_conf, 
-                                                                        dim_state, 
-                                                                        _params.GH_degree(),
-                                                                        cost_obstacle<gpmp2::ArmModel>, 
-                                                                        gpmp2::ObstacleSDFFactor<gpmp2::ArmModel>{gtsam::symbol('x', i), 
-                                                                        robot_model, 
-                                                                        sdf, 
-                                                                        1.0/sig_obs, 
-                                                                        eps_sdf}, 
-                                                                        n_states, 
-                                                                        i, 
-                                                                        temperature, 
-                                                                        high_temperature,
-                                                                        _nodes_weights_map} );    
+
+                    vec_factors.emplace_back( new NGDFactorizedBaseGH_Cuda{dim_conf, 
+                                                                            dim_state, 
+                                                                            _params.GH_degree(),
+                                                                            n_states, 
+                                                                            i, 
+                                                                            _params.sig_obs(), 
+                                                                            _params.eps_sdf(), 
+                                                                            _params.radius(), 
+                                                                            _params.temperature(), 
+                                                                            _params.high_temperature(),
+                                                                            _nodes_weights_map_ptr, 
+                                                                            _cuda_ptr} );
                 }
             }
             
             // The joint optimizer
-            gvi::NGDGH<gvi::GVIFactorizedBase> optimizer{ vec_factors, 
+            gvi::NGDGH<gvi::GVIFactorizedBase_Cuda> optimizer{ vec_factors, 
                                                 dim_state, 
                                                 n_states, 
-                                                i, 
+                                                n, 
                                                 _params.temperature(), 
                                                 _params.high_temperature() };
 
@@ -244,12 +286,13 @@ std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
             optimizer.initilize_precision_matrix( _params.initial_precision_factor() );
 
             optimizer.set_step_size_base( _params.step_size() ); // a local optima
+            optimizer.classify_factors();
 
             optimizer.optimize( true );
 
             res.push_back( optimizer.mean() );
 
-            if ( i == _params.max_iter() ) {
+            if ( n == _params.max_iter() ) {
                 _mean = optimizer.mean();
                 _precision = optimizer.precision();
             }
@@ -259,7 +302,7 @@ std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
     else {
 
         // Vector of base factored optimizers
-        vector<std::shared_ptr<gvi::GVIFactorizedBase>> vec_factors;
+        vector<std::shared_ptr<gvi::GVIFactorizedBase_Cuda>> vec_factors;
 
         for ( int i=0; i<n_states; ++i) {
 
@@ -310,25 +353,22 @@ std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
                                                             _params.temperature(), 
                                                             _params.high_temperature()} );
 
-                // collision factor
-                vec_factors.emplace_back( new GVIFactorizedSDF<gpmp2::ArmModel>{dim_conf, 
-                                                                    dim_state, 
-                                                                    _params.GH_degree(),
-                                                                    cost_obstacle<gpmp2::ArmModel>, 
-                                                                    gpmp2::ObstacleSDFFactor<gpmp2::ArmModel>{gtsam::symbol('x', i), 
-                                                                    robot_model, 
-                                                                    sdf, 
-                                                                    1.0/sig_obs, 
-                                                                    eps_sdf}, 
-                                                                    n_states, 
-                                                                    i, 
-                                                                    temperature, 
-                                                                    high_temperature,
-                                                                    _nodes_weights_map} );    
+                vec_factors.emplace_back( new NGDFactorizedBaseGH_Cuda{dim_conf, 
+                                                                        dim_state, 
+                                                                        _params.GH_degree(),
+                                                                        n_states, 
+                                                                        i, 
+                                                                        _params.sig_obs(), 
+                                                                        _params.eps_sdf(), 
+                                                                        _params.radius(), 
+                                                                        _params.temperature(), 
+                                                                        _params.high_temperature(),
+                                                                        _nodes_weights_map_ptr, 
+                                                                        _cuda_ptr} );
             }
         }
 
-        gvi::NGDGH<gvi::GVIFactorizedBase> optimizer{ vec_factors, 
+        gvi::NGDGH<gvi::GVIFactorizedBase_Cuda> optimizer{ vec_factors, 
                                         dim_state, 
                                         n_states, 
                                         _params.max_iter(), 
@@ -344,6 +384,7 @@ std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
         optimizer.initilize_precision_matrix( _params.initial_precision_factor() );
 
         optimizer.set_step_size_base( _params.step_size() ); // a local optima
+        optimizer.classify_factors();
 
         optimizer.optimize( true );
 
@@ -353,13 +394,14 @@ std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
     }
 }
 
-RobotArm3D GVIMPRobotArm::getRobotSDF() { return _robot_sdf; }
-GVIMPParams GVIMPRobotArm::getParams() { return _params; }
-void GVIMPRobotArm::setTotalTime ( double totTime ) { _params.set_total_time( totTime ); }
-void GVIMPRobotArm::setSigObs ( double sigObs ) { _params.update_sig_obs( sigObs ); }
-void GVIMPRobotArm::setStepSize ( double stepSize ) { _params.update_step_size( stepSize ); }
-void GVIMPRobotArm::setInitPrecisionFactor ( double initPrecFac ) { _params.update_initial_precision_factor( initPrecFac ); }
-void GVIMPRobotArm::setBoundaryPenalties ( double pen ) { _params.update_boundary_penalties( pen ); }
-void GVIMPRobotArm::setTemperature ( double temp ) { _params.set_temperature( temp ); }
-void GVIMPRobotArm::setHighTemperature ( double highTemp ) { _params.set_high_temperature( highTemp ); }
-void GVIMPRobotArm::setNumIter ( int numIter ) { _params.update_max_iter( numIter ); }
+GVIMPParams GVIMPRobotArm_Cuda::getParams() { return _params; }
+int GVIMPRobotArm_Cuda::nlinks() { return _nlinks; }
+int GVIMPRobotArm_Cuda::ndof() { return _ndof; }
+void GVIMPRobotArm_Cuda::setTotalTime ( double totTime ) { _params.set_total_time( totTime ); }
+void GVIMPRobotArm_Cuda::setSigObs ( double sigObs ) { _params.update_sig_obs( sigObs ); }
+void GVIMPRobotArm_Cuda::setStepSize ( double stepSize ) { _params.update_step_size( stepSize ); }
+void GVIMPRobotArm_Cuda::setInitPrecisionFactor ( double initPrecFac ) { _params.update_initial_precision_factor( initPrecFac ); }
+void GVIMPRobotArm_Cuda::setBoundaryPenalties ( double pen ) { _params.update_boundary_penalties( pen ); }
+void GVIMPRobotArm_Cuda::setTemperature ( double temp ) { _params.set_temperature( temp ); }
+void GVIMPRobotArm_Cuda::setHighTemperature ( double highTemp ) { _params.set_high_temperature( highTemp ); }
+void GVIMPRobotArm_Cuda::setNumIter ( int numIter ) { _params.update_max_iter( numIter ); }

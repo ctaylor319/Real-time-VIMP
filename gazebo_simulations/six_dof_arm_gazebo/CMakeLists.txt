@@ -52,7 +52,7 @@ install (
 
 file(GLOB_RECURSE URDF_FILES "urdf/*.urdf")
 file(GLOB_RECURSE SRDF_FILES "moveit_setup/config/*.srdf")
-install(FILES ${URDF_FILES} ${SRDF_FILES} DESTINATION "../robot_control/lib")
+install(FILES ${URDF_FILES} ${SRDF_FILES} DESTINATION "../six_dof_arm_controller/lib")
 
 # Install Python modules for import
 ament_python_install_package(${PROJECT_NAME})

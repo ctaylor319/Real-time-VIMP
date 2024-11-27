@@ -12,6 +12,10 @@
 
 class ComputePoseUpdate : public rclcpp::Node
 {
+enum ControllerMode {
+    Default,
+    Transition
+};
 public:
 
     ComputePoseUpdate();
@@ -23,7 +27,7 @@ private:
     void PoseCallback(nav_msgs::msg::Odometry msg);
     double Quat2Theta(geometry_msgs::msg::Quaternion q);
     void PIDControl(double distError, double angleError, double dt, geometry_msgs::msg::Twist &twist);
-    void TransitionControl(double distError, double angleError, Eigen::VectorXd currVel, double dt, geometry_msgs::msg::Twist &twist);
+    void TransitionControl(double distError, Eigen::VectorXd currVel, Eigen::MatrixXd T, double dt, geometry_msgs::msg::Twist &twist);
 
     // Publishers and Subscribers
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr _pose_publisher;
@@ -36,6 +40,10 @@ private:
     double _K_p_dist; double _K_p_angle;
     double _K_i_dist; double _K_i_angle;
     double _K_d_dist; double _K_d_angle;
+    double _I_dist; double _I_angle;
+
+    ControllerMode _mode;
+    
     double _eps;
     double _prevDistError; double _prevAngleError;
     double _prevTime;

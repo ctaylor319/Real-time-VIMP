@@ -1,8 +1,8 @@
 /**
  * @copyright Georgia Institute of Technology, 2024
- * @file: GVIMPRobotArm.cpp
+ * @file: GVIMPMobileRobot.cpp
  * @author: ctaylor319@gatech.edu
- * @date: 10/03/2024
+ * @date: 11/24/2024
  *
  */
 
@@ -13,20 +13,20 @@
 #include <Poco/StringTokenizer.h>
 #include <Poco/NumberParser.h>
 
-#include "GVIMPRobotArm.h"
+#include "GVIMPMobileRobot.h"
 
 using namespace vimp;
 
-GVIMPRobotArm::GVIMPRobotArm()
+GVIMPMobileRobot::GVIMPMobileRobot()
 {
     // default values
     double total_time = 5.0; int n_states = 10; double coeff_Qc = 1.0;
-    double sig_obs = 0.02; double eps_sdf = 0.2; double radius = 0.0;
+    double sig_obs = 0.02; double eps_sdf = 0.2; double radius = 0.22;
     double step_size = 0.7; double init_precision_factor = 10000.0;
     double boundary_penalties = 10000.0; double temperature = 0.01;
     double high_temperature = 0.2; int low_temp_iterations = 3;
     double stop_err = 1.0; int num_iter = 6; int max_n_backtracking = 5;
-    int GH_deg = 3; int nx = 12; int nu = 6;
+    int GH_deg = 3; int nx = 4; int nu = 2;
 
     // Initialize config file reader
     Poco::Util::AbstractConfiguration *cfg;
@@ -39,24 +39,24 @@ GVIMPRobotArm::GVIMPRobotArm()
 
     // Read in params
     try {
-        total_time = cfg->getDouble("Arm.total_time");
-        n_states = cfg->getInt("Arm.n_states");
-        coeff_Qc = cfg->getDouble("Arm.coeff_Qc");
-        sig_obs = cfg->getDouble("Arm.sig_obs");
-        eps_sdf = cfg->getDouble("Arm.eps_sdf");
-        radius = cfg->getDouble("Arm.radius");
-        step_size = cfg->getDouble("Arm.step_size");
-        init_precision_factor = cfg->getDouble("Arm.init_precision_factor");
-        boundary_penalties = cfg->getDouble("Arm.boundary_penalties");
-        temperature = cfg->getDouble("Arm.temperature");
-        high_temperature = cfg->getDouble("Arm.high_temperature");
-        low_temp_iterations = cfg->getInt("Arm.low_temp_iterations");
-        stop_err = cfg->getDouble("Arm.stop_err");
-        num_iter = cfg->getInt("Arm.num_iter");
-        max_n_backtracking = cfg->getInt("Arm.max_n_backtracking");
-        GH_deg = cfg->getInt("Arm.GH_deg");
-        nx = cfg->getInt("Arm.nx");
-        nu = cfg->getInt("Arm.nu");
+        total_time = cfg->getDouble("Mobile.total_time");
+        n_states = cfg->getInt("Mobile.n_states");
+        coeff_Qc = cfg->getDouble("Mobile.coeff_Qc");
+        sig_obs = cfg->getDouble("Mobile.sig_obs");
+        eps_sdf = cfg->getDouble("Mobile.eps_sdf");
+        radius = cfg->getDouble("Mobile.radius");
+        step_size = cfg->getDouble("Mobile.step_size");
+        init_precision_factor = cfg->getDouble("Mobile.init_precision_factor");
+        boundary_penalties = cfg->getDouble("Mobile.boundary_penalties");
+        temperature = cfg->getDouble("Mobile.temperature");
+        high_temperature = cfg->getDouble("Mobile.high_temperature");
+        low_temp_iterations = cfg->getInt("Mobile.low_temp_iterations");
+        stop_err = cfg->getDouble("Mobile.stop_err");
+        num_iter = cfg->getInt("Mobile.num_iter");
+        max_n_backtracking = cfg->getInt("Mobile.max_n_backtracking");
+        GH_deg = cfg->getInt("Mobile.GH_deg");
+        nx = cfg->getInt("Mobile.nx");
+        nu = cfg->getInt("Mobile.nu");
     } catch ( const std::exception& e ) {
         std::cout << "Unable to parse goal some/all parameters: " << e.what() << std::endl;
     }
@@ -65,16 +65,16 @@ GVIMPRobotArm::GVIMPRobotArm()
                             eps_sdf, radius, step_size, num_iter, init_precision_factor, 
                             boundary_penalties, temperature, high_temperature, low_temp_iterations, 
                             stop_err, max_n_backtracking, "map_bookshelf", "" );
-    _robot_sdf = RobotArm3D( _params.eps_sdf(), _params.radius() );
+    _robot_sdf = MobileRobot( _params.eps_sdf(), _params.radius() );
     initialize_GH_weights();
 }
 
-GVIMPRobotArm::~GVIMPRobotArm()
+GVIMPMobileRobot::~GVIMPMobileRobot()
 {
 
 }
 
-void GVIMPRobotArm::initialize_GH_weights()
+void GVIMPMobileRobot::initialize_GH_weights()
 {
     std::string GH_map_file{ source_root+"/GaussianVI/quadrature/SparseGHQuadratureWeights.bin" };
     try {
@@ -95,24 +95,17 @@ void GVIMPRobotArm::initialize_GH_weights()
     }
 }
 
-std::tuple<VectorXd, SpMat, std::optional<std::vector<VectorXd>>> GVIMPRobotArm::findBestPath 
+std::tuple<VectorXd, SpMat, std::optional<std::vector<VectorXd>>> GVIMPMobileRobot::findBestPath 
 ( 
-    VectorXd start_pos, VectorXd goal_pos, gpmp2::SignedDistanceField sdf, bool visualize
+    VectorXd start_pos, VectorXd goal_pos, gpmp2::PlanarSDF sdf, bool visualize
 )
 {
     // Parse start and goal pose (position+velocity) into parameters
-    VectorXd m0( _params.nx()), mT(_params.nx() );
-    VectorXd m0_pos( _params.nu() ); VectorXd mT_pos( _params.nu() );
-    m0_pos = start_pos; mT_pos = goal_pos;
-    m0.block(0, 0, _params.nu(), 1) = m0_pos;
-    m0.block(_params.nu(), 0, _params.nu(), 1) = VectorXd::Zero(_params.nu());
-    mT.block(0, 0, _params.nu(), 1) = mT_pos;
-    mT.block(_params.nu(), 0, _params.nu(), 1) = VectorXd::Zero(_params.nu());
-    _params.set_m0( m0 );
-    _params.set_mT( mT );
+    _params.set_m0( start_pos );
+    _params.set_mT( goal_pos );
 
     // Update internal SDF model
-    _robot_sdf.update_sdf( sdf ); 
+    _robot_sdf.update_sdf( sdf );
 
     // Optimize over given parameters
     auto full_path = optimize( visualize );
@@ -120,7 +113,7 @@ std::tuple<VectorXd, SpMat, std::optional<std::vector<VectorXd>>> GVIMPRobotArm:
     return res;
 }
 
-std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
+std::optional<std::vector<VectorXd>> GVIMPMobileRobot::optimize ( bool visualize )
 {
     // parameters
     int n_states = _params.nt();
@@ -210,11 +203,11 @@ std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
                                                                 _params.high_temperature()} );
 
                     // collision factor
-                    vec_factors.emplace_back( new GVIFactorizedSDF<gpmp2::ArmModel>{dim_conf, 
+                    vec_factors.emplace_back( new NGDFactorizedPlanarSDF<gpmp2::PointRobotModel>{dim_conf, 
                                                                         dim_state, 
                                                                         _params.GH_degree(),
-                                                                        cost_obstacle<gpmp2::ArmModel>, 
-                                                                        gpmp2::ObstacleSDFFactor<gpmp2::ArmModel>{gtsam::symbol('x', i), 
+                                                                        cost_obstacle_planar<gpmp2::PointRobotModel>, 
+                                                                        gpmp2::ObstaclePlanarSDFFactor<gpmp2::PointRobotModel>{gtsam::symbol('x', i), 
                                                                         robot_model, 
                                                                         sdf, 
                                                                         1.0/sig_obs, 
@@ -239,10 +232,12 @@ std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
             optimizer.set_niter_low_temperature( _params.max_iter_lowtemp() );
             optimizer.set_stop_err( _params.stop_err() );
 
+            // optimizer.update_file_names(_params.saving_prefix());
             optimizer.set_mu( joint_init_theta );
 
             optimizer.initilize_precision_matrix( _params.initial_precision_factor() );
 
+            // optimizer.set_GH_degree(_params.GH_degree());
             optimizer.set_step_size_base( _params.step_size() ); // a local optima
 
             optimizer.optimize( true );
@@ -311,11 +306,11 @@ std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
                                                             _params.high_temperature()} );
 
                 // collision factor
-                vec_factors.emplace_back( new GVIFactorizedSDF<gpmp2::ArmModel>{dim_conf, 
+                vec_factors.emplace_back( new NGDFactorizedPlanarSDF<gpmp2::PointRobotModel>{dim_conf, 
                                                                     dim_state, 
                                                                     _params.GH_degree(),
-                                                                    cost_obstacle<gpmp2::ArmModel>, 
-                                                                    gpmp2::ObstacleSDFFactor<gpmp2::ArmModel>{gtsam::symbol('x', i), 
+                                                                    cost_obstacle_planar<gpmp2::PointRobotModel>, 
+                                                                    gpmp2::ObstaclePlanarSDFFactor<gpmp2::PointRobotModel>{gtsam::symbol('x', i), 
                                                                     robot_model, 
                                                                     sdf, 
                                                                     1.0/sig_obs, 
@@ -353,13 +348,13 @@ std::optional<std::vector<VectorXd>> GVIMPRobotArm::optimize ( bool visualize )
     }
 }
 
-RobotArm3D GVIMPRobotArm::getRobotSDF() { return _robot_sdf; }
-GVIMPParams GVIMPRobotArm::getParams() { return _params; }
-void GVIMPRobotArm::setTotalTime ( double totTime ) { _params.set_total_time( totTime ); }
-void GVIMPRobotArm::setSigObs ( double sigObs ) { _params.update_sig_obs( sigObs ); }
-void GVIMPRobotArm::setStepSize ( double stepSize ) { _params.update_step_size( stepSize ); }
-void GVIMPRobotArm::setInitPrecisionFactor ( double initPrecFac ) { _params.update_initial_precision_factor( initPrecFac ); }
-void GVIMPRobotArm::setBoundaryPenalties ( double pen ) { _params.update_boundary_penalties( pen ); }
-void GVIMPRobotArm::setTemperature ( double temp ) { _params.set_temperature( temp ); }
-void GVIMPRobotArm::setHighTemperature ( double highTemp ) { _params.set_high_temperature( highTemp ); }
-void GVIMPRobotArm::setNumIter ( int numIter ) { _params.update_max_iter( numIter ); }
+MobileRobot GVIMPMobileRobot::getRobotSDF() { return _robot_sdf; }
+GVIMPParams GVIMPMobileRobot::getParams() { return _params; }
+void GVIMPMobileRobot::setTotalTime ( double totTime ) { _params.set_total_time( totTime ); }
+void GVIMPMobileRobot::setSigObs ( double sigObs ) { _params.update_sig_obs( sigObs ); }
+void GVIMPMobileRobot::setStepSize ( double stepSize ) { _params.update_step_size( stepSize ); }
+void GVIMPMobileRobot::setInitPrecisionFactor ( double initPrecFac ) { _params.update_initial_precision_factor( initPrecFac ); }
+void GVIMPMobileRobot::setBoundaryPenalties ( double pen ) { _params.update_boundary_penalties( pen ); }
+void GVIMPMobileRobot::setTemperature ( double temp ) { _params.set_temperature( temp ); }
+void GVIMPMobileRobot::setHighTemperature ( double highTemp ) { _params.set_high_temperature( highTemp ); }
+void GVIMPMobileRobot::setNumIter ( int numIter ) { _params.update_max_iter( numIter ); }

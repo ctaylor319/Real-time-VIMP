@@ -1,8 +1,8 @@
 /**
  * @copyright Georgia Institute of Technology, 2024
- * @file: GVIMPImpl.cpp
+ * @file: GVIMPRobotArm_CudaImpl.cpp
  * @author: ctaylor319@gatech.edu
- * @date: 10/07/2024
+ * @date: 11/10/2024
  *
  */
 
@@ -14,15 +14,10 @@
 
 #include <grid_map_core/GridMap.hpp>
 #include <grid_map_msgs/msg/grid_map.hpp>
-#include <std_msgs/msg/bool.hpp>
 #include <control_msgs/msg/joint_trajectory_controller_state.hpp>
 #include <geometry_msgs/msg/point.hpp>
 #include <geometry_msgs/msg/pose_array.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
-#include "motion_planning_msgs/msg/waypoint_path.hpp"
-#include "motion_planning_msgs/msg/visualized_path.hpp"
-#include "motion_planning_msgs/srv/runtime_parameter_interface.hpp"
-#include "motion_planning_msgs/srv/runtime_path_interface.hpp"
 
 #include <grid_map_ros/grid_map_ros.hpp>
 #include <grid_map_sdf/SignedDistanceField.hpp>
@@ -33,17 +28,15 @@
 #include <Poco/StringTokenizer.h>
 #include <Poco/NumberParser.h>
 
-#include "GVIMPImpl.h"
+#include "GVIMPRobotArm_CudaImpl.h"
 
-GVIMPImpl::GVIMPImpl() : Node( "GVIMP_Impl" ),
+GVIMPImpl::GVIMPImpl() : Node( "GVIMPImpl" ),
 _state(RobotState::Idle),
 _new_path_needed(false),
 _reset_called(false)
 {
     _gridmap_subscriber = create_subscription<grid_map_msgs::msg::GridMap>( "/gridmap_binary", 10,
         std::bind( &GVIMPImpl::gridMapCallback, this, std::placeholders::_1 ) );
-    _path_status_subscriber = create_subscription<std_msgs::msg::Bool>( "/curr_subpath_complete", 10,
-        std::bind( &GVIMPImpl::pathStatusCallback, this, std::placeholders::_1 ) );
     _robot_state_subscriber = create_subscription<control_msgs::msg::JointTrajectoryControllerState>( "/arm_controller/controller_state", 10,
         std::bind( &GVIMPImpl::stateCallback, this, std::placeholders::_1 ) );
     _occupied_cells_subscriber = create_subscription<visualization_msgs::msg::MarkerArray>("/occupied_cells_vis_array", 10,
@@ -55,7 +48,7 @@ _reset_called(false)
     _path_service = create_service<motion_planning_msgs::srv::RuntimePathInterface>( "robot_runtime_interface/set_path",
         std::bind(&GVIMPImpl::handlePathRequest, this, std::placeholders::_1, std::placeholders::_2) );
 
-    _path_planner = std::unique_ptr<vimp::RobotArmMotionPlanner>( new vimp::RobotArmMotionPlanner() ); // Instance of the motion planner
+    _path_planner = std::unique_ptr<vimp::GVIMPRobotArm_Cuda>( new vimp::GVIMPRobotArm_Cuda() ); // Instance of the motion planner
 
     this->declare_parameter("visualize", false);
 
@@ -71,7 +64,7 @@ _reset_called(false)
     // Read in the goal position
     try {
         std::vector<double> goal_vec;
-        Poco::StringTokenizer goal_str( cfg->getString("goal"), " " );
+        Poco::StringTokenizer goal_str( cfg->getString("Arm.goal"), " " );
         for ( Poco::StringTokenizer::Iterator it = goal_str.begin(); it != goal_str.end(); ++it ) {
             goal_vec.push_back( Poco::NumberParser::parseFloat(*it) );
         }
@@ -83,18 +76,14 @@ _reset_called(false)
 
     // If the number of joint positions you gave is different then how many the robot model has,
     // throw an exception
-    if ( _goal_pos.size() != _path_planner->getRobotSDF().nlinks() ) {
+    if ( _goal_pos.size() != _path_planner->nlinks() ) {
         throw std::invalid_argument("Goal has incorrect number of joint positions");
     }
 }
 
 GVIMPImpl::~GVIMPImpl()
 {
-}
 
-void GVIMPImpl::pathStatusCallback ( std_msgs::msg::Bool msg )
-{
-    _new_path_needed = msg.data;
 }
 
 void GVIMPImpl::stateCallback ( control_msgs::msg::JointTrajectoryControllerState msg )
@@ -129,7 +118,6 @@ void GVIMPImpl::gridMapCallback ( grid_map_msgs::msg::GridMap msg )
         }
         for ( int i=0; i<waypoint_entropy.size(); ++i ) {
             _curr_path.waypoint_entropies.push_back( waypoint_entropy[i] );
-            // std::cout << waypoint_entropy[i] << std::endl;
         }
         _path_publisher->publish( _curr_path );
 
@@ -268,7 +256,7 @@ void GVIMPImpl::handlePathRequest ( const std::shared_ptr<motion_planning_msgs::
         for ( Poco::StringTokenizer::Iterator it = goal_str.begin(); it != goal_str.end(); ++it ) {
             goal_vec.push_back( Poco::NumberParser::parseFloat(*it) );
         }
-        if ( goal_vec.size() == _path_planner->getRobotSDF().nlinks() ) {
+        if ( goal_vec.size() == _path_planner->nlinks() ) {
             _goal_pos = Map<VectorXd, Unaligned>( goal_vec.data(), goal_vec.size() );
         }
     }
@@ -343,29 +331,6 @@ gpmp2::SignedDistanceField GVIMPImpl::generateSDF ( grid_map_msgs::msg::GridMap 
     
     // Parse grid_map_sdf into gpmp2_sdf
     gpmp2::SignedDistanceField gpmp2_sdf( origin, cell_size, gpmp2_data );
-
-    // For testing purposes
-    //
-    // for ( int z=6; z<7; ++z ) {
-    //     for ( int y=0; y<12; ++y ) {
-    //         for ( int x=0; x<12; ++x ) {
-    //             grid_map::Position3 gmTestPoint( double(x)/10.0, double(y)/10.0, double(z)/10.0 );
-    //             std::cout << gm_sdf.value(gmTestPoint) << " ";
-    //         }
-    //         std::cout << std::endl;
-    //     }
-    //     std::cout << std::endl;
-    // }
-
-    // for ( int z=6; z<7; ++z ) {
-    //     for ( int y=0; y<12; ++y ) {
-    //         for ( int x=0; x<12; ++x ) {
-    //             gtsam::Point3 gtsamTestPoint( double(x)/10.0, double(y)/10.0, double(z)/10.0 );
-    //             std::cout << gpmp2_sdf.getSignedDistance(gtsamTestPoint) << " ";
-    //         }
-    //         std::cout << std::endl;
-    //     }
-    // }
 
     return gpmp2_sdf;
 }

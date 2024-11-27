@@ -1,31 +1,29 @@
 /**
  * @copyright Georgia Institute of Technology, 2024
- * @file: GVIMPRobotArm.h
+ * @file: GVIMPMobileRobot.h
  * @author: ctaylor319@gatech.edu
- * @date: 10/03/2024
- * @brief: The GVIMP optimizer to integrate the robot arm
+ * @date: 11/24/2024
+ * @brief: The GVIMP optimizer to integrate the mobile robot
  * into the rest of the automation framework.
  *
  */
 
 #pragma once
 
-#include <instances/gvimp/GVIMPRobotSDF.h>
+#include <instances/gvimp/GVIMPPlanarPRSDF.h>
 #include <GaussianVI/ngd/NGD-GH.h>
 
-#include "RobotArm3D.h"
+#include "MobileRobot.h"
 
 namespace vimp{
 
-using RobotArm = GVIMPRobotSDF<gpmp2::ArmModel, RobotArm3D>;
-
-class GVIMPRobotArm
+class GVIMPMobileRobot
 {
 public:
 
     // Constructors & Destructors
-    GVIMPRobotArm();
-    ~GVIMPRobotArm();
+    GVIMPMobileRobot();
+    ~GVIMPMobileRobot();
 
     /**
      * @brief: Read in the generated Gaussian-hermite weights (see README
@@ -42,15 +40,17 @@ public:
      *
      * @param sdf [in]: The signed distance field of the environment.
      *
+     * @param visualize [in]: Whether you want to use Matplotlib to visualize results. Default value is false.
+     *
      * @return means and covariances of planned path
      */
     std::tuple<VectorXd, SpMat, std::optional<std::vector<VectorXd>>> findBestPath
     (
-        VectorXd start_pos, VectorXd goal_pos, gpmp2::SignedDistanceField sdf, bool visualize=false
+        VectorXd start_pos, VectorXd goal_pos, gpmp2::PlanarSDF sdf, bool visualize=false
     );
 
     // Getter/Setter functions
-    RobotArm3D getRobotSDF();
+    MobileRobot getRobotSDF();
     GVIMPParams getParams();
     void setTotalTime(double totTime);
     void setSigObs(double sigObs);
@@ -67,7 +67,7 @@ private:
     SpMat _precision;
     GVIMPParams _params;
     QuadratureWeightsMap _nodes_weights_map;
-    RobotArm3D _robot_sdf;
+    MobileRobot _robot_sdf;
 
     /**
      * @brief: Helper function for finding the best path

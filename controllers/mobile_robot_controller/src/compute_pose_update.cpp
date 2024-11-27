@@ -30,19 +30,22 @@
 using namespace std::chrono_literals;
 
 ComputePoseUpdate::ComputePoseUpdate() : Node( "compute_pose_update" ),
-_K_p_dist(0.0),
-_K_p_angle(0.0),
+_K_p_dist(0.8),
+_K_p_angle(1.0),
 _K_i_dist(0.0),
 _K_i_angle(0.0),
 _K_d_dist(0.0),
 _K_d_angle(0.0),
-_eps(0.0)
+_mode(ControllerMode::Default),
+_eps(0.1)
 {
     _path_subscriber = create_subscription<motion_planning_msgs::msg::WaypointPath>( "/vimp_path", 10,
         std::bind( &ComputePoseUpdate::VIMPCallback, this, std::placeholders::_1 ) );
     _pose_subscriber = create_subscription<nav_msgs::msg::Odometry>( "/odom", 10,
         std::bind( &ComputePoseUpdate::PoseCallback, this, std::placeholders::_1 ) );
     _pose_publisher = create_publisher<geometry_msgs::msg::Twist>( "/cmd_vel", 10 );
+    _waypoint_queue.push(Eigen::VectorXd{{1.0, 2.0, 0.0, 0.0}});
+    _curr_waypoint = Eigen::VectorXd{{0.0, 1.0, 0.1, 0.1}};
 }
 
 ComputePoseUpdate::~ComputePoseUpdate()
@@ -77,52 +80,79 @@ void ComputePoseUpdate::VIMPCallback( motion_planning_msgs::msg::WaypointPath ms
 void ComputePoseUpdate::PoseCallback( nav_msgs::msg::Odometry msg )
 {
     geometry_msgs::msg::Twist vel_out;
-    vel_out.linear.x = 0; vel_out.linear.y = 0;
-
-    Eigen::VectorXd currPos;
-    currPos << msg.pose.pose.position.x, msg.pose.pose.position.y;
-    Eigen::VectorXd desiredPos = _curr_waypoint.block(0, 0, 1, 2);
-    double distError = (desiredPos - currPos).norm();
-
-    double currAngle = Quat2Theta( msg.pose.pose.orientation );
-    double desiredAngle = atan2( (desiredPos - currPos)[1], (desiredPos - currPos)[0] );
-
-    // atan2's range is from [0, 2*pi), so we change the range to [-pi/2, pi/2) since having error
-    // at the sup/inf of can be problematic
-    double angleError = fmod((desiredAngle - currAngle)+M_PI, 2*M_PI)-M_PI;
+    vel_out.linear.x = 0; vel_out.linear.y = 0; vel_out.angular.z = 0;
 
     double time = msg.header.stamp.sec + double(msg.header.stamp.nanosec)/1e9;
     double dt = time - _prevTime;
+    double distError = 0;
+    double angleError = 0;
 
-    // First make sure we have a path to follow
-    if ( _waypoint_queue.size() > 0 ) {
-        if ( distError <= _eps && _waypoint_queue.size() > 0 ) {
-            Eigen::VectorXd currentVel;
-            currentVel << msg.twist.twist.linear.x, msg.twist.twist.linear.y;
+    if ( _curr_waypoint.size() > 0 ) {
+        Eigen::VectorXd currPos(2);
+        currPos << msg.pose.pose.position.x, msg.pose.pose.position.y;
+        Eigen::VectorXd desiredPos = _curr_waypoint.segment(0, 2);
+        distError = (desiredPos - currPos).norm();
 
-            // Get angle to next waypoint
-            desiredPos = _waypoint_queue.front().block(0, 0, 1, 2);
-            desiredAngle = atan2( (desiredPos - currPos)[1], (desiredPos - currPos)[0] );
-            angleError = fmod((desiredAngle - currAngle)+M_PI, 2*M_PI)-M_PI;
+        double currAngle = Quat2Theta( msg.pose.pose.orientation );
+        double desiredAngle = atan2( (desiredPos - currPos)[1], (desiredPos - currPos)[0] );
 
-            TransitionControl( distError, angleError, currentVel, dt, vel_out );
+        // Get the transformation matrix from fixed to body frame (all velocities must be in body frame)
+        Eigen::MatrixXd T(2, 2);
+        T << cos(currAngle), -sin(currAngle),
+             sin(currAngle),  cos(currAngle);
+
+        // Extract current velocity
+        Eigen::VectorXd currentVel(2);
+        currentVel << msg.twist.twist.linear.x, msg.twist.twist.linear.y;
+
+        // atan2's range is from [-pi, pi). Convert to [0, 2pi).
+        currAngle = currAngle >= 0 ? currAngle : fmod((currAngle+3*M_PI), 2*M_PI)+M_PI;
+        desiredAngle = desiredAngle >= 0 ? desiredAngle : fmod((desiredAngle+3*M_PI), 2*M_PI)+M_PI;
+
+        // Take error and convert back to [-pi, pi) range
+        angleError = fmod((desiredAngle - currAngle)+M_PI, 2*M_PI)-M_PI;
+
+        // std::cout << "distError: " << distError << std::endl;
+        // std::cout << "currAngle: " << currAngle << std::endl;
+        // std::cout << "desiredAngle: " << desiredAngle << std::endl;
+        // std::cout << "angleError: " << angleError << std::endl;
+
+        // First make sure we have a path to follow
+        if ( _waypoint_queue.size() > 0 ) {
+            if ( distError <= _eps && _waypoint_queue.size() > 0 ) {
+                if ( _mode == ControllerMode::Transition ) {
+                    _mode = ControllerMode::Default;
+                    _I_angle = 0;
+                    _I_dist = 0;
+                }
+
+                // If we're close to waypoint position, create smooth transition to waypoint velocity
+                TransitionControl( currentVel, T, dt, vel_out );
+            }
+            else {
+                if ( _mode == ControllerMode::Default ) {
+                    _mode = ControllerMode::Transition;
+                    _I_angle = 0;
+                    _I_dist = 0;
+                }
+
+                // Default is PID
+                PIDControl( distError, angleError, dt, vel_out );
+            }
         }
-        else {
-            // Default is PID
+        else if ( _curr_waypoint.size() > 0 ) {
+            // Apply PID until goal reached
             PIDControl( distError, angleError, dt, vel_out );
-        }
-    }
-    else if ( _curr_waypoint.size() > 0 ) {
-        // Apply PID until goal reached
-        PIDControl( distError, angleError, dt, vel_out );
-        if ( distError <= _eps ) {
-            _curr_waypoint.resize(0);
+            if ( distError <= _eps ) {
+                _curr_waypoint.resize(0);
+            }
         }
     }
     _prevTime = time;
     _prevDistError = distError;
     _prevAngleError = angleError;
     _pose_publisher->publish( vel_out );
+
 }
 
 inline double ComputePoseUpdate::Quat2Theta( geometry_msgs::msg::Quaternion q )
@@ -133,38 +163,62 @@ inline double ComputePoseUpdate::Quat2Theta( geometry_msgs::msg::Quaternion q )
 void ComputePoseUpdate::PIDControl( double distError, double angleError, double dt, geometry_msgs::msg::Twist &twist )
 {
     double P_dist = distError; double P_angle = angleError;
-    double I_dist = distError*dt; double I_angle = angleError*dt;
+    _I_dist += distError*dt; _I_angle += angleError*dt;
     double D_dist = 0; double D_angle = 0;
     if ( dt > 0 ) { // Division by zero check
         D_dist = (distError - _prevDistError)/dt;
         D_angle = (angleError - _prevAngleError)/dt;
     }
 
-    double PID_dist = _K_p_dist*P_dist + _K_i_dist*I_dist + _K_d_dist*D_dist;
-    double PID_angle = _K_p_angle*P_angle + _K_i_angle*I_angle + _K_d_angle*D_angle;
+    double PID_dist = _K_p_dist*P_dist + _K_i_dist*_I_dist + _K_d_dist*D_dist;
+    double PID_angle = _K_p_angle*P_angle + _K_i_angle*_I_angle + _K_d_angle*D_angle;
+
+    if ( abs(PID_dist) >= 0.2 ) {
+        PID_dist = 0.2*(PID_dist/abs(PID_dist));
+    }
+    if ( abs(PID_angle) >= 2.5 ) {
+        PID_angle = 2.5*(PID_angle/abs(PID_angle));
+    }
 
     twist.linear.x = PID_dist * cos( angleError );
     twist.linear.y = PID_dist * sin( angleError );
     twist.angular.z = PID_angle;
+
+    // std::cout << "vx: " << twist.linear.x << std::endl;
+    // std::cout << "vy: " << twist.linear.y << std::endl;
+    // std::cout << "vtheta: " << PID_angle << std::endl << std::endl;
 }
 
-void ComputePoseUpdate::TransitionControl( double distError, double angleError, Eigen::VectorXd currVel, double dt, geometry_msgs::msg::Twist &twist )
+void ComputePoseUpdate::TransitionControl( Eigen::VectorXd currVel, Eigen::MatrixXd T, 
+                                            double dt, geometry_msgs::msg::Twist &twist )
 {
-    double P_angle = angleError;
-    double I_angle = angleError*dt;
+    // Compute the desired orientation of the robot based on waypoint velocity
+    Eigen::VectorXd desiredVel = T.transpose()*_curr_waypoint.segment(2, 2);
+    Eigen::VectorXd vel_diff = desiredVel - currVel;
+    double nextAngleError = atan2(vel_diff[1], vel_diff[0]);
+
+    double P_angle = nextAngleError;
+    _I_angle += nextAngleError*dt;
     double D_angle = 0;
     if ( dt > 0 ) { // Division by zero check
-        D_angle = (angleError - _prevAngleError)/dt;
+        D_angle = (nextAngleError - _prevAngleError)/dt;
     }
-    double PID_angle = _K_p_angle*P_angle + _K_i_angle*I_angle + _K_d_angle*D_angle;
+    double PID_angle = _K_p_angle*P_angle + _K_i_angle*_I_angle + _K_d_angle*D_angle;
 
-    Eigen::VectorXd desiredVel = _curr_waypoint.block(0, 2, 1, 2);
 
-    twist.linear.x = ( (distError*currVel[0]) + ((_eps-distError)*desiredVel[0]) ) / _eps;
-    twist.linear.y = ( (distError*currVel[1]) + ((_eps-distError)*desiredVel[1]) ) / _eps;
-    twist.angular.z = PID_angle;
+    if ( abs(PID_angle) >= 2.5 ) {
+        PID_angle = 2.5*(PID_angle/abs(PID_angle));
+    }
 
-    double max_lin_vel_diff = 0.05;
+    twist.linear.x = desiredVel[0]*cos(nextAngleError);
+    twist.linear.y = desiredVel[1]*sin(nextAngleError);
+    twist.angular.z = nextAngleError;
+
+    // std::cout << "vx: " << twist.linear.x << std::endl;
+    // std::cout << "vy: " << twist.linear.y << std::endl;
+    // std::cout << "vtheta: " << nextAngleError << std::endl << std::endl;
+
+    double max_lin_vel_diff = 0.01;
     if ( (desiredVel - currVel).norm() <= max_lin_vel_diff ) {
         _curr_waypoint = _waypoint_queue.front();
         _waypoint_queue.pop();

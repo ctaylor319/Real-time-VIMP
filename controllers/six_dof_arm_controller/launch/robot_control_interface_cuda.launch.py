@@ -20,7 +20,7 @@ def generate_launch_description():
 
   start_gvimp_cmd = Node(
     package="motion_planning",
-    executable="GVIMPImpl",
+    executable="GVIMPImpl_Cuda",
     output="screen",
     parameters=[{"visualize": LaunchConfiguration('visualize')}]
   )

@@ -1,17 +1,22 @@
 /**
  * @copyright Georgia Institute of Technology, 2024
- * @file: GVIMPImpl.h
+ * @file: GVIMPRobotArm_CudaImpl.h
  * @author: ctaylor319@gatech.edu
- * @date: 10/07/2024
- * @brief: Implements the GVIMP algorithm to construct a
- * path for the robot to follow
+ * @date: 11/10/2024
+ * @brief: Implements the GVIMP algorithm with CUDA GPU acceleration
+ * to construct a path for the robot to follow
  *
  */
 
+#pragma once
+
 #include <rclcpp/rclcpp.hpp>
 
-#include "RobotArm3D.h"
-#include "GVIMPRobotArm.h"
+#include "GVIMPRobotArm_Cuda.h"
+#include "motion_planning_msgs/msg/waypoint_path.hpp"
+#include "motion_planning_msgs/msg/visualized_path.hpp"
+#include "motion_planning_msgs/srv/runtime_parameter_interface.hpp"
+#include "motion_planning_msgs/srv/runtime_path_interface.hpp"
 
 class GVIMPImpl : public rclcpp::Node
 {
@@ -31,7 +36,6 @@ private:
     
     // Publishers and subscribers
     rclcpp::Subscription<grid_map_msgs::msg::GridMap>::SharedPtr _gridmap_subscriber;
-    rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr _path_status_subscriber;
     rclcpp::Subscription<control_msgs::msg::JointTrajectoryControllerState>::SharedPtr _robot_state_subscriber;
     rclcpp::Subscription<visualization_msgs::msg::MarkerArray>::SharedPtr _occupied_cells_subscriber;
     rclcpp::Publisher<motion_planning_msgs::msg::WaypointPath>::SharedPtr _path_publisher;
@@ -46,14 +50,6 @@ private:
      * @param msg [in]: grid_map message containing full map of surrounding environment.
      */
     void gridMapCallback(grid_map_msgs::msg::GridMap msg);
-
-    /**
-     * @brief: callback function for when the robot needs to replan its path. Determined
-     * by the controller and the result is passed here.
-     *
-     * @param msg [in]: boolean message, set to true when a new path plan is needed.
-     */
-    void pathStatusCallback(std_msgs::msg::Bool msg);
 
     /**
      * @brief: callback function for the robot's current state. Used to set the start
@@ -117,7 +113,7 @@ private:
     std::vector<double> extractLogEntropyFromJoint(SpMat joint_precision);
 
     enum RobotState _state;
-    std::unique_ptr<vimp::RobotArmMotionPlanner> _path_planner;
+    std::unique_ptr<vimp::GVIMPRobotArm_Cuda> _path_planner;
     VectorXd _start_pos, _goal_pos;
     bool _new_path_needed, _reset_called;
     motion_planning_msgs::msg::WaypointPath _curr_path;

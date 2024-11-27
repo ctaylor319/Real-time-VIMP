@@ -43,8 +43,8 @@ AddTimeParameterization::AddTimeParameterization() : Node( "add_time_parameteriz
     }
     std::string urdf_path, srdf_path;
     try {
-        urdf_path = install_dir+"/lib/"+cfg->getString("urdf");
-        srdf_path = install_dir+"/lib/"+cfg->getString("srdf");
+        urdf_path = install_dir+"/lib/"+cfg->getString("Arm.urdf");
+        srdf_path = install_dir+"/lib/"+cfg->getString("Arm.srdf");
     } catch ( const std::exception& e ) {
         std::cout << "Unable to parse robot files: " << e.what() << std::endl;
     }
